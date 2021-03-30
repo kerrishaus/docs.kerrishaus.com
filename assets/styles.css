@@ -1,0 +1,115 @@
+body
+{
+    margin: 0px;
+    background-color: #fff;
+    color #444;
+    font: normal 14px/20px Arial, Helvetica, sans-serif;
+}
+
+.card
+{
+    background-color: #f4f4f4;
+    color: black;
+    
+    padding-left: 1.5em;
+    padding-right: 1.5em;
+    padding-top: 1em;
+    padding-bottom: 1em;
+    
+    border-radius: 6px;
+    
+    box-shadow: inset 7px 7px 1px 0px #222222;
+    
+    margin-bottom: 1.3em;
+}
+
+.card h1
+{
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.header
+{
+    width: 100%;
+    background-color: #494949;
+    border-bottom: 2px solid black;
+}
+
+.header-text
+{
+    color: white;
+    font: normal 56px Calibri;
+    margin-left: .25em;
+}
+
+.docs-selector
+{
+    display: flex;
+}
+
+.docs-selector > div
+{
+    margin: 1em;
+}
+
+.rounded-float-box
+{
+    background-color: #494949;
+    color: white;
+    
+    border: 3px solid black;
+    border-radius: 10px;
+    
+    padding: 1em;
+    font-size: 200%;
+}
+
+.content-container
+{
+    margin: 1em;
+}
+
+.toc
+{
+    display: table;
+    padding: 7px;
+    border: 1px solid #a2a9b1;
+    background-color: #f8f9fa;
+    line-height: 1.6;
+    font-family: "Calibri";
+    color: #202122
+}
+
+.toctitle
+{
+    font-size: 82%;
+    text-align: center;
+}
+
+.toc > ul
+{
+    list-style-type: none;
+    list-style-image: none;
+    padding: 0;
+    margin-top: -15%;
+    margin-bottom: 0;
+}
+
+a
+{
+    text-decoration: none;
+    background: none;
+    color: #0645ad;
+}
+
+a:hover
+{
+    text-decoration: underline;
+}
+
+a:visited
+{
+    color: #0b0080;
+}
