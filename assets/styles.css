@@ -1,115 +1,447 @@
+@import "person.css";
+
+:root
+{
+    --PRIMARY: #171a2b;
+    --SECONDARY: #192229;
+}
+
+*
+{
+    scroll-behavior: smooth;
+}
+
+html 
+{
+    background: url("https://steamuserimages-a.akamaihd.net/ugc/1281786203417819061/410AE4A688C29F2F7DE363CE327A0F611B6405F2/?imw=5000&imh=5000&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
 body
 {
-    margin: 0px;
-    background-color: #fff;
-    color #444;
-    font: normal 14px/20px Arial, Helvetica, sans-serif;
-}
-
-.card
-{
-    background-color: #f4f4f4;
-    color: black;
-    
-    padding-left: 1.5em;
-    padding-right: 1.5em;
-    padding-top: 1em;
-    padding-bottom: 1em;
-    
-    border-radius: 6px;
-    
-    box-shadow: inset 7px 7px 1px 0px #222222;
-    
-    margin-bottom: 1.3em;
-}
-
-.card h1
-{
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-}
-
-.header
-{
-    width: 100%;
-    background-color: #494949;
-    border-bottom: 2px solid black;
-}
-
-.header-text
-{
+    background-color: transparent;
     color: white;
-    font: normal 56px Calibri;
-    margin-left: .25em;
+    font-family: Montserrat;
 }
 
-.docs-selector
+.background
+{
+    background-color: transparent;
+    filter: blur(8px);
+    
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+}
+
+nav.navbar
+{
+    border-radius: 0px;
+    margin-bottom: 0px;
+    
+    /*background: linear-gradient(35deg, var(--PRIMARY), var(--SECONDARY));*/
+    background-color: #14161D;
+    border: none;
+}
+
+hr
+{
+    border-top: 1px solid #696969;
+}
+
+.well
+{
+    background-color: #11141b;
+    border: 1px solid #363a44;
+}
+
+code
+{
+    background-color: #11141b;
+}
+
+.text-muted
+{
+    color: #bfbfbf
+}
+
+.form-control
+{
+    background-color: #11141b;
+    border: 1px solid #363a44;
+}
+
+.page-container
+{
+    position: relative;
+    z-index: 1;
+}
+
+.wiki-container
 {
     display: flex;
 }
 
-.docs-selector > div
+.wiki-container > .sidebar
 {
-    margin: 1em;
+    background: linear-gradient(185deg, var(--PRIMARY), black);
+    width: 18%;
+    padding: 10px;
+    
+    max-height: 100%;
 }
 
-.rounded-float-box
+.wiki-container > .wiki-content
 {
-    background-color: #494949;
+    width: 82%;
+    padding: 20px;
+    background: linear-gradient(35deg, var(--PRIMARY), #46535cc4);
+    
+    backdrop-filter: blur(4px);
+}
+
+.searchbar
+{
+    position: sticky;
+    top: 10px;
+    margin-bottom: 4px;
+}
+
+.topic
+{
+    padding: 5px;
+}
+
+.topic-heading
+{
+    color: #949494;
+    margin-bottom: 10px;
+}
+
+.topic-section
+{
+    display: flex;
     color: white;
+    padding: 5px;
+    border-radius: 3px;
+}
+
+.topic-section > :nth-child(3)
+{
+    text-align: right;
+}
+
+.topic-section:hover
+{
+    color: white;
+    background-color: #3A4D71;
+    text-decoration: none;
+}
+
+.topic-section.active
+{
+    background-color: #3D5B90;
+    border-radius: 3px 3px 0px 0px;
+    padding-left: 13px;
+}
+
+.topic > .topic-section.active:not(:first-child)
+{
+    margin-top: 10px;
+}
+
+.topic-section.active + .page-list
+{
+    display: block;
+}
+
+.page-list
+{
+    display: none;
+    background-color: #38425d;
+    border-radius: 0px 0px 3px 3px;
+    margin-bottom: 10px;
+}
+
+.page-list-item
+{
+    padding: 5px;
+    padding-left: 10px;
+}
+
+.page-list>:nth-child(odd)>div
+{
+    background-color: #343b51;
+}
+
+.page-list>:last-child>div
+{
+    border-radius: 0px 0px 3px 3px;
+}
+
+.page-list-item:hover
+{
+    background-color: #5a6584 !important;
+    color: #6dbbff;
+}
+
+.page-list-item.active
+{
+    background-color: #ffffff !important;
+    color: #3f5d77;
+}
+
+.topic-section > .topic-icon
+{
     
-    border: 3px solid black;
+}
+
+.topic-section > .topic-title
+{
+    width: 100%;
+}
+
+.topic-section > .topic-count
+{
+    color: #949494;
+}
+
+.topic-section.active > .topic-count
+{
+    color: whitesmoke;
+}
+
+.topic-separator
+{
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+table
+{
     border-radius: 10px;
-    
-    padding: 1em;
-    font-size: 200%;
 }
 
-.content-container
+td, tr, th
 {
-    margin: 1em;
+    padding: 5px;
+    background-color: #bbbbbb24;
 }
 
-.toc
+th:first-child
 {
-    display: table;
-    padding: 7px;
-    border: 1px solid #a2a9b1;
-    background-color: #f8f9fa;
-    line-height: 1.6;
-    font-family: "Calibri";
-    color: #202122
+    border-radius: 5px 0 0 0;
 }
 
-.toctitle
+th:last-child
 {
-    font-size: 82%;
+    border-radius: 0 5px 0 0;
+}
+
+tr:last-child td:first-child
+{
+    border-radius: 0 0 0 5px;
+    -moz-border-radius: 0 0 0 5px;
+    -webkit-border-radius: 0 0 0 5px;
+}
+
+tr:last-child td:last-child
+{
+    border-radius: 0 0 5px 0;
+    -moz-border-radius: 0 0 5px 0;
+    -webkit-border-radius: 0 0 5px 0;
+}
+
+.bar-group 
+{
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.bar-group > div
+{
+    padding: 6px 12px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1;
+    color: #555;
     text-align: center;
+    background-color: #11141B;
+    border: 1px solid #363A44;
 }
 
-.toc > ul
+.bar-group > .bar-group-addon
 {
-    list-style-type: none;
-    list-style-image: none;
-    padding: 0;
-    margin-top: -15%;
-    margin-bottom: 0;
+    border-radius: 4px 0px 0px 4px;
+    background-color: #777777;
+    color: white;
+}
+
+.bar-group > .bar-group-text
+{
+    color: #C7254E;
+    font-family: monospace;
+    text-align: left;
+    border-radius: 0px 4px 4px 0px;
+    border-left: none;
+    width: 100%;
+}
+
+.wiki-footer
+{
+    background-color: black;
+    padding: 10px;
+    padding-bottom: 20px;
+}
+
+.nav>li>span 
+{
+    position: relative;
+    display: block;
+    padding: 10px 15px;
+    color: #9d9d9d;
+}
+
+.navbar-nav>li>span 
+{
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+#toc_container 
+{
+    background-color: #2b3853ba;
+    border: 1px solid #4d7492;
+    display: table;
+    font-size: 95%;
+    margin-bottom: 1em;
+    padding: 20px;
+    width: auto;
+}
+
+.toc_title 
+{
+    font-weight: 700;
+    text-align: center;
+    max-width: 100%;
+}
+
+.quote
+{
+    padding-top: 1px;
+    padding-bottom: 5px;
+    padding-left: 3em;
+    padding-right: 3em;
+    margin-bottom: 10px;
+    background-color: #3d5b90ad;
+    border-left: 5px solid #5075b7;
+}
+
+.quote-text
+{
+    max-width: 100%;
+}
+
+.quote > .quote-author
+{
+    padding-left: 2em;
+}
+
+.item-showcase
+{
+    display: flex;
+    padding-top: 1px;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+    background-color: #3d5b90ad;
+    border-left: 5px solid #5075b7;
+}
+
+.item-image-container
+{
+    
+}
+
+.item-image
+{
+    width: 64px;
+    height: 64px;
+    margin-right: 1em;
+}
+
+/* width */
+::-webkit-scrollbar 
+{
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track 
+{
+  background: #141726;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb 
+{
+  background: #343B51;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover 
+{
+  background: #39517C;
+}
+
+.h1 .small, .h1 small, .h2 .small, .h2 small, .h3 .small, .h3 small, .h4 .small, .h4 small, .h5 .small, .h5 small, .h6 .small, .h6 small, h1 .small, h1 small, h2 .small, h2 small, h3 .small, h3 small, h4 .small, h4 small, h5 .small, h5 small, h6 .small, h6 small
+{
+    color: #949494;
+}
+
+.wiki-content > h1:first-child 
+{
+    margin-top: -10px;
 }
 
 a
 {
-    text-decoration: none;
-    background: none;
-    color: #0645ad;
+    color: #84c6ff;
 }
 
 a:hover
 {
-    text-decoration: underline;
+    color: #6fa7d8;
 }
 
-a:visited
+a.dead-link
 {
-    color: #0b0080;
+    color: #ff3c3c;
+}
+
+a.dead-link:hover
+{
+    color: #bb2020;
+}
+
+@keyframes highlightTarget
+{
+  from
+  {
+      background-color: #D4D713;
+  }
+  to
+  {
+      background-color: transparent;
+  }
+}
+
+:target {
+  animation-name: highlightTarget;
+  animation-duration: 4s;
 }

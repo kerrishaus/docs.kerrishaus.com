@@ -1,0 +1,65 @@
+.person-panel
+{
+    margin: 10px;
+    border: 1px solid #3D5B90;
+    
+    float: right;
+}
+
+.person-panel > .person-image
+{
+    background-color: whitesmoke;
+}
+
+.person-panel > .person-image > img.image
+{
+    width: 200px;
+    background-color: whitesmoke;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.person-panel > .person-name
+{
+    text-align: center;
+    background-color: #202D40;
+    padding: 7px;
+}
+
+.person-panel > .person-name > h1, h4
+{
+    font-size: 16px;
+}
+
+.person-panel > .info-section
+{
+    background-color: blue;
+}
+
+.person-panel > .info-section > .section-header
+{
+    background-color: #4a6894;
+    text-align: center;
+    padding: 3px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.info-section > .section-header > h2
+{
+    font-size: 14px;
+}
+
+.info-section > .info
+{
+    background-color: #363F4C;
+    color: black;
+    padding: 10px;
+}
+
+.info-section > .info > table
+{
+    width: 100%;
+    color: white;
+}
