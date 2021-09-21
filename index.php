@@ -1,13 +1,4 @@
 <?php 
-    $debug = false;
-
-    if (isset($debug) and $debug)
-    {
-        ini_set('display_errors', '1');
-        ini_set('display_startup_errors', '1');
-        error_reporting(E_ALL);
-    }
-
     $start_time = microtime(true);
     
     // find portal user if logged in
@@ -46,19 +37,19 @@
         <script src="https://docs.kerrishaus.com/assets/wiki.js"></script>
         
         <?php
-            if ($wiki->parseCurrentFile() != "NULL") // we are viewing a document
+            if ($wiki->currentFile != null) // we are viewing a document
             {
-                if (!empty($wiki->parseCurrentFile()))
-                    if ($wiki->parseCurrentFile() == ".html")
+                if (!empty($wiki->currentFile))
+                    if ($wiki->currentFile == ".html")
                         echo "<title>Kerris Haus Docs</title>" . PHP_EOL;
                     else
-                        echo "<title>" . Utility::parsePageName($wiki->parseCurrentFile()) . " &bull; Kerris Haus Docs</title>" . PHP_EOL;
+                        echo "<title>" . Utility::parsePageName($wiki->currentFile) . " &bull; Kerris Haus Docs</title>" . PHP_EOL;
                 else
                     echo "<title>Kerris Haus Docs</title>" . PHP_EOL;
             }
             else // we are not viewing a document
             {
-                echo "<title>" . Utility::parseSectionName($wiki->parseCurrentDirectory()) . " &bull; Kerris Haus Docs</title>" . PHP_EOL;
+                echo "<title>" . Utility::parseSectionName($wiki->currentDirectory) . " &bull; Kerris Haus Docs</title>" . PHP_EOL;
             }
         ?>
     </head>
@@ -83,7 +74,7 @@
                         <?php
                             if (!empty($_GET['page']))
                             {
-                                $directoryList = $wiki->parseCurrentDirectory();
+                                $directoryList = $wiki->currentDirectory;
                                 
                                 $directoryList = explode('/', $directoryList);
                                 
@@ -98,9 +89,9 @@
                                     echo "<li><span>&gt;</span></li>" . PHP_EOL . "</li><li><a href='https://docs.kerrishaus.com/{$directoryChain}'>" . Utility::parseSectionName($directory) . "</a></li>" . PHP_EOL;
                                 }
                                 
-                                if ($wiki->parseCurrentFile() != "NULL")
+                                if ($wiki->currentFile != null)
                                 {
-                                    echo "<li><span>&gt;</span></li>" . PHP_EOL . "<li class='active'><a href='#'>" . Utility::parsePageName($wiki->parseCurrentFile()) . "</a></li>" . PHP_EOL;
+                                    echo "<li><span>&gt;</span></li>" . PHP_EOL . "<li class='active'><a href='#'>" . Utility::parsePageName($wiki->currentFile) . "</a></li>" . PHP_EOL;
                                 }
                                 
                                 echo "<li><span>(<a href=''>Huntress</a>, <a href=''>kennyrkun</a>, <a href=''>crackass</a>, <a href='#page_authors'>and 3 more</a>)</span></li>";
@@ -139,16 +130,16 @@
                 <?php
                     if (!empty($_GET['page']))
                     {
-                        if ($wiki->parseCurrentFile() == "NULL")
+                        if ($wiki->currentFile == null)
                         {
-                            $file = NULL;
+                            $file = null;
                             
-                            if (file_exists($wiki->parseCurrentDirectory() . "/index.html"))
-                                $file = Utility::includeFile($wiki->parseCurrentDirectory() . "/index.html");
+                            if (file_exists(Config::$contentDirectory . "/{$wiki->currentDirectory}/index.html"))
+                                $file = Utility::includeFile($wiki->currentDirectory . "/index.html");
                                 
                             if (empty($file))
                             {
-                                $files = Utility::scanAllDir($wiki->parseCurrentDirectory());
+                                $files = Utility::scanDirectoryRecursive(Config::$contentDirectory . "/{$wiki->currentDirectory}");
                                 
                                 $count = count($files);
                                 
@@ -159,10 +150,10 @@
                                     if (is_dir($file))
                                         continue;
                                     
-                                    if ($debug)
-                                        echo "<li><a href='https://docs.kerrishaus.com/{$wiki->parseCurrentDirectory()}/{$file}'>" . Utility::parsePageName($file) . "</a> <span class='text-muted'>({$file})</span></li>" . PHP_EOL;
+                                    if (Config::$debug)
+                                        echo "<li><a href='https://docs.kerrishaus.com/{$wiki->currentDirectory}/{$file}'>" . Utility::parsePageName($file) . "</a> <span class='text-muted'>({$file})</span></li>" . PHP_EOL;
                                     else
-                                        echo "<li><a href='https://docs.kerrishaus.com/{$wiki->parseCurrentDirectory()}/{$file}'>" . Utility::parsePageName($file) . "</a></li>" . PHP_EOL;
+                                        echo "<li><a href='https://docs.kerrishaus.com/{$wiki->currentDirectory}/{$file}'>" . Utility::parsePageName($file) . "</a></li>" . PHP_EOL;
                                 }
                                     
                                 echo "</ul>" . PHP_EOL;
@@ -172,9 +163,9 @@
                         }
                         else // include the section page
                         {
-                            $file = Utility::includeFile($wiki->parseCurrentPath());
+                            $file = Utility::includeFile($wiki->fullParsedPath);
                             if (empty($file))
-                                if (file_exists($wiki->parseCurrentPath()))
+                                if (file_exists($wiki->fullParsedPath))
                                     echo "<h1>This page is empty.</h1>" . PHP_EOL;
                                 else
                                     echo "<h1>404 &bull; Page not found.</h1>" . PHP_EOL;
@@ -197,12 +188,12 @@
             </div>
             
             <div class='wiki-footer'>
-             <p>Debug Information</p>
+                <p>Debug Information</p>
             <?php
                 echo "Raw: " . $wiki->currentPage . "<br/>" . PHP_EOL;
-                echo "Directory: " . $wiki->parseCurrentDirectory() . "<br/>" . PHP_EOL;
-                echo "File: " . $wiki->parseCurrentFile() . "<br/>" . PHP_EOL;
-                echo "Full Path: " . $wiki->parseCurrentPath() . "<br/>" . PHP_EOL;
+                echo "Directory: " . $wiki->currentDirectory . "<br/>" . PHP_EOL;
+                echo "File: " . $wiki->currentFile . "<br/>" . PHP_EOL;
+                echo "Full Path: " . $wiki->fullParsedPath . "<br/>" . PHP_EOL;
                 //echo "Modify Date: " . filemtime($wiki->parseCurrentPath()) . "<br/>" . PHP_EOL;
                 echo "Load Time: " . (microtime(true) - $start_time) . "<br/>" . PHP_EOL;
             ?>

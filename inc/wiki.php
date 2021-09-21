@@ -9,250 +9,36 @@
         ".htaccess"
     ];
 
-    class Logger
-    {
-        static function info($string)
-        {
-            // nothing for now
-        }
-        
-        function __destruct()
-        {
-            // group all logs and post to database
-        }
-        
-        private $logs = array();
-    }
-
-    class Utility
-    {
-        static function scanDirectory($directory = ".")
-        {
-            if (file_exists($directory))
-            {
-                $filesInDirectory = scandir($directory);
-                return $filesInDirectory;
-            }
-            else
-                return false;
-        }
-        
-        static function getLastEdit($file)
-        {
-            return filemtime($file);
-        }
-        
-        static function parsePageName($page)
-        {
-            return ucfirst(str_replace('_', ' ', pathinfo($page, PATHINFO_FILENAME)));
-        }
-        
-        static function parseSectionName($page)
-        {
-            return ucwords(str_replace('_', ' ', $page));
-        }
-        
-        static function parseTopicName($page)
-        {
-            return ucwords(str_replace('_', ' ', $page));
-        }
-        
-        static function makedbsafe($string)
-        {
-            return $string;
-        }
-        
-        static function wikify($page)
-        {
-            return $page;
-        }
-        
-        // https://stackoverflow.com/questions/34190464/php-scandir-recursively mateoruda
-        static function scanAllDir($dir) 
-        {
-            $result = [];
-            foreach(scandir($dir) as $filename) 
-            {
-                if ($filename[0] === '.') continue;
-                
-                $filePath = $dir . '/' . $filename;
-                if (is_dir($filePath)) 
-                {
-                    $result[] = $filePath;
-                    foreach (Utility::scanAllDir($filePath) as $childFilename) 
-                    {
-                        $result[] = $filename . '/' . $childFilename;
-                    }
-                } 
-                else 
-                {
-                    $result[] = $filename;
-                }
-            }
-            return $result;
-        }
-        
-        static function resolveLink($string)
-        {
-            $nearbyFiles = Utility::scanAllDir(".");
-            
-            foreach ($nearbyFiles as $file)
-            {
-                $string2 = str_replace(' ', '_', $string) . ".html";
-                
-                if (basename($file) == $string2)
-                    return $file;
-            }
-            
-            return false;
-        }
-        
-        static function resolveDataBlocks($string)
-        {
-            return $string;
-            
-            preg_match_all('/<json>[\s\S]+<\/json>/', $string, $matches, PREG_OFFSET_CAPTURE);
-            
-            if (empty($matches))
-                exit("no!");
-            else
-            {
-                echo "<pre>";
-                var_dump($matches);
-                echo "</pre>";
-                exit;
-            }
-            
-            $stringOffset = 0;
-            foreach ($matches[0] as $match)
-            {
-                exit;
-            }
-            
-            return $string;
-        }
-        
-        static function parseHeadings($string)
-        {
-            $headingReg = array(
-                "/====(.*)====/",
-                "/===(.*)===/",
-                "/==(.*)==/",
-                '/==(.*)(\|(.*))?==/',
-                '/(  \n)/',
-            );
-            
-            $headingRep = array(
-                "<h4>$1</h4>",
-                "<h3>$1</h3>",
-                "<h1>$1</h1>",
-                "<h1>$1 <small>$2</small></h1>",
-                "<br/><br/>",
-            );
-            
-            return preg_replace($headingReg, $headingRep, $string);
-        }
-        
-        static function parseLinks($string)
-        {
-            preg_match_all('(\[\[[^][]*]\])', $string, $matches, PREG_OFFSET_CAPTURE);
-            
-            $stringOffset = 0;
-            foreach ($matches[0] as $match)
-            {
-                $start = $match[1] + $stringOffset;
-                $end = $start + strlen($match[0]);
-                $originalSize = strlen($match[0]);
-
-                $linkName = preg_replace("/(\[\[)|(\]\])/", "", $match[0]);
-                
-                $strings = explode('|', $linkName);
-                
-                if (count($strings) == 2)
-                {
-                    $linkName = $strings[0];
-                    
-                    if ($link = Utility::resolveLink($strings[1]))
-                        $linkLocation = "http://docs.kerrishaus.com/" . $link;
-                    else
-                        $linkLocation = false;
-                }
-                else if (count($strings) == 3)
-                {
-                    $linkName = $strings[0];
-                    $location = $strings[1];
-                    if (strtolower($location) == "instagram")
-                        $linkLocation = "https://instagram.com/" . $strings[2];
-                }
-                else
-                {
-                    if ($link = Utility::resolveLink($linkName))
-                        $linkLocation = "http://docs.kerrishaus.com/" . $link;
-                    else
-                        $linkLocation = false;
-                }
-                
-                if (!isset($linkLocation) or empty($linkLocation) or !$linkLocation)
-                    $link = "<a class='dead-link' href='{$linkLocation}'>{$linkName}</a>";
-                else
-                    $link = "<a href='{$linkLocation}'>{$linkName}</a>";
-                
-                $stringOffset += strlen($link) - $originalSize;
-                $string = substr_replace($string, "{$link}", $start, strlen($match[0]));
-            }
-            
-            return $string;
-        }
-        
-        static function includeFile($path)
-        {
-            $file = file_get_contents($path);
-            
-            $file = Utility::parseLinks($file);
-            
-            $file = Utility::parseHeadings($file);
-            
-            $file = Utility::resolveDataBlocks($file);
-            
-            return Utility::wikify($file);
-        }
-        
-        private static $idCounter = 0;
-        
-        public static function getID()
-        {
-            return Utility::$idCounter++;
-        }
-    }
+    require_once("config.php");
+    require_once("logger.php");
+    require_once("utility.php");
     
+    if (Config::$debug)
+    {
+        ini_set('display_errors', 1);
+        ini_set('display_startup_errors', 1);
+        error_reporting(E_ALL);
+    }
+
     class Page
     {
         public $name;
         public $icon;
-        public $filename;
-        public $parent;
+        public $href;
         
         public $current = false;
         
-        function __construct($name, $icon, $filename, $parent)
+        function __construct($name, $icon, $href)
         {
             $this->name = Utility::parsePageName($name);
             $this->icon = $icon;
-            $this->filename = $filename;
-            $this->parent = $parent;
-            
-            if ($this->parent->parent->wiki->parseCurrentFile() == $this->filename)
-                $this->current = true;
+            $this->href = $href;
         }
         
         function buildHTML()
         {
-            $link = $this->parent->directory . "/" . $this->filename;
-            $link = str_replace('/home/u572899867/domains/kerrishaus.com/public_html/docs/', '', $link);
-            $link = substr($link, 0, -5);
-            
             return "
-                <a href='http://docs.kerrishaus.com/{$link}' id='" . Utility::getID() . "'>
+                <a href='{$this->href}' id='" . Utility::getID() . "'>
                     <div class='page-list-item" . ($this->current ? " active" : "") . "'>
                         {$this->name}
                     </div>
@@ -264,55 +50,21 @@
     class Section
     {
         public $name;
+        public $href;
         public $icon = null;
         public $pages = array();
         
-        public $directory;
-        
         public $current = false;
         
-        public $parent = null;
-        
-        function __construct($directory, $icon, $parent)
+        function __construct($name, $icon, $href)
         {
-            $this->name = ucwords(str_replace('_', ' ', $directory));
+            $this->name = ucwords(str_replace('_', ' ', $name));
+            $this->href = $href;
             $this->icon = $icon;
-            $this->parent = $parent;
-            
-            $this->directory = $this->parent->directory . "/" . $directory;
-            $cleanDirectory = str_replace('/home/u572899867/domains/kerrishaus.com/public_html/docs/', '', $this->directory);
-            
-            if (substr($this->parent->wiki->parseCurrentDirectory(), -1) == "/")
-                $cleanDirectory .= "/";
-            
-            if ($cleanDirectory == $this->parent->wiki->parseCurrentDirectory())
-                $this->current = true;
-            
-            $rawPages = Utility::scanDirectory($this->directory);
-            
-            if (!empty($rawPages))
-            {
-                foreach ($rawPages as $pageDirectory)
-                {
-                    if (in_array($pageDirectory, $GLOBALS['forbiddenTopics']))
-                        continue;
-                        
-                    if (is_dir($this->directory . "/" . $pageDirectory))
-                        continue;
-                        
-                    if (basename($pageDirectory) == "index.html")
-                        continue;
-                        
-                    $this->addPage($pageDirectory, null, $pageDirectory);
-                }
-            }
-            else
-                echo("empty page: " . $this->directory);
         }
         
-        function addPage($name, $icon, $filename)
+        function addPage($page)
         {
-            $page = new Page($name, $icon, $filename, $this);
             array_push($this->pages, $page);
         }
         
@@ -320,10 +72,8 @@
         {
             $pageCount = count($this->pages);
             
-            $link = str_replace('/home/u572899867/domains/kerrishaus.com/public_html/docs/', '', $this->directory);
-            
             $content = "
-                <a href='http://docs.kerrishaus.com/{$link}' class='topic-section" . ($this->current ? " active" : "") . "' id='" . Utility::getID() . "'>
+                <a href='http://docs.kerrishaus.com/{$this->href}' class='topic-section" . ($this->current ? " active" : "") . "' id='" . Utility::getID() . "'>
                     <div class='topic-icon'>
                         {$this->icon}
                     </div>
@@ -356,37 +106,15 @@
         
         public $wiki;
         
-        function __construct($directory, $icon, $wiki)
+        function __construct($name, $icon, $wiki)
         {
-            $this->name = Utility::parseTopicName($directory);
+            $this->name = Utility::parseTopicName($name);
             $this->icon = $icon;
-            $this->directory = $_SERVER['DOCUMENT_ROOT'] . "/" . $directory;
             $this->wiki = $wiki;
-            
-            $rawSections = Utility::scanDirectory($this->directory);
-            
-            if (!empty($rawSections))
-            {
-                foreach ($rawSections as $sectionDirectory)
-                {
-                    // skip files and such, we only want directories as sections
-                    if (!is_dir($this->directory . "/" . $sectionDirectory))
-                        continue;
-                    
-                    if (in_array($sectionDirectory, $GLOBALS['forbiddenTopics']))
-                        continue;
-                        
-                    $this->addSection($sectionDirectory, $icon);
-                }
-            }
-            else
-                echo("empty section: " . $directory);
         }
         
-        function addSection($directory, $icon)
+        function addSection($section)
         {
-            $section = new Section($directory, $icon, $this);
-            
             array_push($this->sections, $section);
         }
         
@@ -410,57 +138,89 @@
     class WikiBuilder
     {
         public $topics = array();
-        
-        public $currentPage = "";
-        
-        public $currentFilename = "";
+
+        public $rawPath = "";
+        public $currentPage = NULL;
+        public $currentFile = "";
         public $currentDirectory = "";
+        public $fullParsedPath = "";
         
         function __construct()
         {
-            $rawTopics = Utility::scanDirectory($_SERVER['DOCUMENT_ROOT']);
-            
             if (isset($_GET['page']))
-            {
                 $this->currentPage = Utility::makedbsafe($_GET['page']);
-            }
             
-            foreach ($rawTopics as $topicDirectory)
+            if (isset($this->currentPage) and !empty($this->currentPage))
             {
-                // skip files and such, we only want directories as topics
-                if (!is_dir($topicDirectory) or in_array($topicDirectory, $GLOBALS['forbiddenTopics']))
-                    continue;
+                if ($this->currentPage[-1] == "/")
+                    $this->currentPage = substr($this->currentPage, 0, -1);
+                    
+                $page = explode('/', $this->currentPage);
                 
-                $topic = new Topic($topicDirectory, null, $this);
-                array_push($this->topics, $topic);
+                switch (count($page))
+                {
+                    case 1: // topic only
+                        $this->currentFile = null;
+                        $this->currentDirectory = $page[0];
+                        break;
+                        
+                    case 2: // topic + section
+                        $this->currentFile = null;
+                        $this->currentDirectory = "{$page[0]}/{$page[1]}";
+                        break;
+                        
+                    case 3: // topic + section + page
+                        $this->currentFile = $page[2];
+                        
+                        if (pathinfo($this->currentFile, PATHINFO_EXTENSION) != "html")
+                            $this->currentFile .= ".html";
+                            
+                        $this->currentDirectory = "{$page[0]}/{$page[1]}";
+                        break;
+                        
+                    default:
+                        die("internal counting error");
+                }
+                
+                $this->fullParsedPath = "{$this->currentDirectory}/{$this->currentFile}";
             }
-        }
-        
-        function parseCurrentFile()
-        {
-            $file = $this->currentPage;
-            if (is_dir($file))
-                return "NULL";
-            $file = basename($file);
-            
-            if (substr($file, -5) != ".html")
-                $file .= ".html";
-                
-            return $file;
-        }
-        
-        function parseCurrentDirectory()
-        {
-            $file = $this->currentPage;
-            if (!is_dir($this->currentPage))
-                return pathinfo($file, PATHINFO_DIRNAME);
             else
-                return $file;
-        }
-        
-        function parseCurrentPath()
-        {
-            return $this->parseCurrentDirectory() . "/" . $this->parseCurrentFile();
+            {
+                $this->currentFile = null;
+                $this->currentDirectory = null;
+            }
+            
+            $wikiFiles = Utility::getWikiFiles();
+                
+            foreach ($wikiFiles['topics'] as $topic)
+            {
+                $newTopic = new Topic($topic['name'], null, $this);
+                
+                foreach ($topic['sections'] as $section)
+                {
+                    $newSection = new Section($section['name'], null, $section['href']);
+
+                    $ned = explode('/', $this->currentDirectory);
+                    $ned = $ned[count($ned) - 1];
+                    
+                    if ($section['name'] == $ned)
+                        $newSection->current = true;
+                    
+                    $newTopic->addSection($newSection);
+                    
+                    foreach ($section['pages'] as $page)
+                    {
+                        $newPage = new Page($page['file'], null, $page['href']);
+                        
+                        if ($page['file'] == $this->currentFile)
+                            $newPage->current = true;
+                        
+                        $newSection->addPage($newPage);
+                    }
+                }
+                
+                array_push($this->topics, $newTopic);
+            }
         }
         
         function buildBreadcrumbsHTML()
