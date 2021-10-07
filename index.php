@@ -9,7 +9,7 @@
     if (isset($_SESSION['portal_session']['user']))
     {
         $userinfo = "<li>
-                        <a href='https://portal.kerrishaus.com/users/index.php?user={$_SESSION['portal_session']['user']['id']}'><i class='fa fa-user'></i> {$_SESSION['portal_session']['user']['username']}</a>
+                        <a href='https://portal.kerrishaus.com/users/index.php?user={$_SESSION['portal_session']['user']['id']}'><i class='fa fa-user'></i> <span class='sr-only'>Signed in as </span>{$_SESSION['portal_session']['user']['username']}</a>
                     </li>";
     }
     
@@ -24,6 +24,8 @@
 
 <html lang="en">
     <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css" />
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
@@ -37,68 +39,55 @@
         <script src="https://docs.kerrishaus.com/assets/wiki.js"></script>
         
         <?php
-            if ($wiki->currentFile != null) // we are viewing a document
+            if ($wiki->currentFile != null) // we are viewing a page
             {
                 if (!empty($wiki->currentFile))
-                    if ($wiki->currentFile == ".html")
-                        echo "<title>Kerris Haus Docs</title>" . PHP_EOL;
-                    else
-                        echo "<title>" . Utility::parsePageName($wiki->currentFile) . " &bull; Kerris Haus Docs</title>" . PHP_EOL;
+                    echo "<title>" . Utility::parsePageName($wiki->currentFile) . " &bull; Kerris Haus Docs</title>" . PHP_EOL;
+            }
+            else // we are not viewing a page
+            {
+                if ($wiki->currentDirectory != null)
+                    echo "<title>" . Utility::parseTopicName($wiki->currentDirectory) . " &bull; Kerris Haus Docs</title>" . PHP_EOL;
                 else
                     echo "<title>Kerris Haus Docs</title>" . PHP_EOL;
-            }
-            else // we are not viewing a document
-            {
-                echo "<title>" . Utility::parseSectionName($wiki->currentDirectory) . " &bull; Kerris Haus Docs</title>" . PHP_EOL;
             }
         ?>
     </head>
     
     <body>
-        <nav class="navbar navbar-inverse">
+        <nav class="navbar navbar-inverse navbar-fixed-top">
             <div class="container-fluid">
                 <div class="navbar-header">
-                    <img class="navbar-brand" alt="Do it right." src="https://avatars3.githubusercontent.com/u/40926044?s=64&u=15f6fc288427f635d3686159b4136f096f889ed2&v=4" style="padding:8px">
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbarCollapse" aria-expanded="false">
+                    <?php
+                        if (!empty($_GET['page']))
+                            echo '<img class="navbar-brand" alt="Do it right." src="https://avatars3.githubusercontent.com/u/40926044?s=64&u=15f6fc288427f635d3686159b4136f096f889ed2&v=4" style="padding:8px">';
+                        else
+                        {
+                            echo '
+                            <a href="https://kerrishaus.com/" class="navbar-brand">
+                                <img src="https://kerrishaus.com/assets/logo/text-small.png" alt="KUN INDUSTRIES">
+                            </a>';
+                        }
+                    ?>
+                    
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbarCollapse" aria-expanded="false" aria-controls="navbar">
                         <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
+                        <i class="fa fa-user"></i>
+                    </button>
+                    
+                    <button type="button" class="navbar-toggle" aria-expanded="false" onclick='toggleSidebar()' aria-controls="sidebar">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class='icon-bar'></span>
+                        <span class='icon-bar'></span>
+                        <span class='icon-bar'></span>
                     </button>
                 </div>
-                    
-                <div class="collapse navbar-collapse" id="navbarCollapse">
-                    <ul class="nav navbar-nav">
-                        <li><a href="https://docs.kerrishaus.com"><i class='fa fa-home'></i> Home</a></li>
-                        
-                        <?php
-                            if (!empty($_GET['page']))
-                            {
-                                $directoryList = $wiki->currentDirectory;
-                                
-                                $directoryList = explode('/', $directoryList);
-                                
-                                $directoryChain = "";
-                                
-                                foreach ($directoryList as $directory)
-                                {
-                                    if (empty($directory))
-                                        continue;
-                                    
-                                    $directoryChain .= $directory . "/";
-                                    echo "<li><span>&gt;</span></li>" . PHP_EOL . "</li><li><a href='https://docs.kerrishaus.com/{$directoryChain}'>" . Utility::parseSectionName($directory) . "</a></li>" . PHP_EOL;
-                                }
-                                
-                                if ($wiki->currentFile != null)
-                                {
-                                    echo "<li><span>&gt;</span></li>" . PHP_EOL . "<li class='active'><a href='#'>" . Utility::parsePageName($wiki->currentFile) . "</a></li>" . PHP_EOL;
-                                }
-                                
-                                echo "<li><span>(<a href=''>Huntress</a>, <a href=''>kennyrkun</a>, <a href=''>crackass</a>, <a href='#page_authors'>and 3 more</a>)</span></li>";
-                            }
-                        ?>
-                    </ul>
                 
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="nav navbar-nav desktop-breadcrumbs">
+                        <?php echo $wiki->buildBreadcrumbsHTML(); ?>
+                    </ul>
+                    
                     <ul class="nav navbar-nav navbar-right">
                         <?php echo $userinfo; ?>
                     </ul>
@@ -108,7 +97,7 @@
         
         <div class='page-container'>
             <div class='wiki-container'>
-                <div class='sidebar'>
+                <div class='sidebar mobile-sidebar-hidden' id='sidebar'>
                     <div class='sidebar-content'>
                         <div class='searchbar'>
                             <form class='form'>
@@ -127,6 +116,13 @@
                         <abbr title='Credits for page content.'><i class='fa fa-user'></i></abbr> This page was authored by <a href=''>Huntress</a>, <a href=''>kennyrkun</a>.
                     </div>
                     -->
+                    
+                    <div class='mobile-breadcrumbs'>
+                        <ul>
+                            <?php echo $wiki->buildBreadcrumbsHTML(); ?>
+                        </ul>
+                    </div>
+                    
                 <?php
                     if (!empty($_GET['page']))
                     {
@@ -182,7 +178,7 @@
                     }                    
                 ?>
                     <div id='page_authors' class='' style='margin-top:20px;padding-top: 20px;border-top: 1px solid #696969'>
-                        <abbr title='Credits for page content.'><i class='fa fa-user'></i></abbr> This page was authored by <a href=''>Huntress</a>, <a href=''>kennyrkun</a>.
+                        <abbr title='Credits for page content.'><i class='fa fa-user'></i></abbr> This page was authored by <a href='https://instagram.com/Huntress790'>Huntress</a>.
                     </div>
                 </div>
             </div>

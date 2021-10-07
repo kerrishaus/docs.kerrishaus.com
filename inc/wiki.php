@@ -139,11 +139,11 @@
     {
         public $topics = array();
 
-        public $rawPath = "";
-        public $currentPage = NULL;
-        public $currentFile = "";
-        public $currentDirectory = "";
-        public $fullParsedPath = "";
+        public $rawPath = null;
+        public $currentPage = null;
+        public $currentFile = null;
+        public $currentDirectory = null;
+        public $fullParsedPath = null;
         
         function __construct()
         {
@@ -225,7 +225,36 @@
         
         function buildBreadcrumbsHTML()
         {
-            
+            if ($this->fullParsedPath != null)
+            {
+                $content = "";
+                
+                $content .= '<li><a href="https://docs.kerrishaus.com"><i class="fa fa-home" aria-label="Home"></i></a></li>';
+                
+                $directoryList = $this->currentDirectory;
+                
+                $directoryList = explode('/', $directoryList);
+                
+                $directoryChain = "";
+                
+                foreach ($directoryList as $directory)
+                {
+                    if (empty($directory))
+                        continue;
+                    
+                    $directoryChain .= $directory . "/";
+                    $content .= "<li><span>&gt;</span></li>" . PHP_EOL . "</li><li><a href='https://docs.kerrishaus.com/{$directoryChain}'>" . Utility::parseSectionName($directory) . "</a></li>" . PHP_EOL;
+                }
+                
+                if ($this->currentFile != null)
+                {
+                    $content .= "<li><span>&gt;</span></li>" . PHP_EOL . "<li class='active'><a href='#'>" . Utility::parsePageName($this->currentFile) . "</a></li>" . PHP_EOL;
+                }
+                
+                $content .= "<li><span>(<a href='https://instagram.com/Huntress790'>Huntress</a>)</span></li>";
+                
+                return $content;
+            }
         }
         
         function buildSidebarHTML()

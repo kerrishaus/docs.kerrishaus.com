@@ -22,6 +22,7 @@ html
 
 body
 {
+    margin-top: 50px;
     background-color: transparent;
     color: white;
     font-family: Montserrat;
@@ -320,7 +321,7 @@ tr:last-child td:last-child
     border: 1px solid #4d7492;
     display: table;
     font-size: 95%;
-    margin-bottom: 1em;
+    margin: 1em;
     padding: 20px;
     width: auto;
 }
@@ -444,4 +445,77 @@ a.dead-link:hover
 :target {
   animation-name: highlightTarget;
   animation-duration: 4s;
+}
+
+.mobile-breadcrumbs
+{
+    display: none;
+}
+
+@media only screen and (max-width: 766px)
+{
+    .mobile-sidebar-hidden
+    {
+        display: none;
+    }
+    
+    .mobile-content-hidden
+    {
+        display: none;
+    }
+    
+    .wiki-container
+    {
+        display: block;
+    }
+    
+    .wiki-container > .sidebar
+    {
+        background-color: red;
+        position: absolute;
+        width: 100%;
+        z-index: 20;
+        padding: 50px;
+        max-height: none;
+    }
+    
+    .wiki-container > .wiki-content
+    {
+        width: 100%;
+    }
+    
+    .person-panel
+    {
+        float: none;
+    }
+
+    .mobile-breadcrumbs
+    {
+        display: block;
+        
+        background-color: #14161D;
+        padding: 4px;
+        border-radius: 2px;
+        margin-bottom: 18px;
+    }
+
+    .mobile-breadcrumbs > ul
+    {
+        list-style: none;
+        display: flex;
+        justify-content: space-around;
+        align-content: center;
+        margin: 0px;
+        padding-inline-start: 0px
+    }
+    
+    .mobile-breadcrumbs > ul > li
+    {
+        float: left;
+    }
+    
+    .desktop-breadcrumbs
+    {
+        display: none;
+    }
 }
