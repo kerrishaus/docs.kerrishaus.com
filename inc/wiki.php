@@ -160,13 +160,19 @@
                 switch (count($page))
                 {
                     case 1: // topic only
+                        // topics have preset pages drawn up by the index, so we will keep this one null.
                         $this->currentFile = null;
                         $this->currentDirectory = $page[0];
                         break;
                         
                     case 2: // topic + section
-                        $this->currentFile = null;
                         $this->currentDirectory = "{$page[0]}/{$page[1]}";
+                        
+                        if (file_exists(Config::$contentDirectory . "/{$this->currentDirectory}/index.html"))
+                            $this->currentFile = "index.html";
+                        else
+                            $this->currentFile = null;
+                            
                         break;
                         
                     case 3: // topic + section + page

@@ -1,4 +1,6 @@
 <?php
+    
+    require_once("Parsedown.php");
 
     class Utility
     {
@@ -41,6 +43,11 @@
                 }
             }
             return $result;
+        }
+        
+        static function relativeDate($timestamp)
+        {
+            return date("Y-m-d", $timestamp);
         }
         
         static function getWikiFiles()
@@ -138,7 +145,8 @@
             
             foreach ($nearbyFiles as $file)
             {
-                $string2 = str_replace(' ', '_', $string) . ".html";
+                if (is_file($file))
+                    $string2 = str_replace(' ', '_', $string) . ".html";
                 
                 if (basename($file) == $string2)
                     return $file;
@@ -180,6 +188,7 @@
                 "/==(.*)==/",
                 '/==(.*)(\|(.*))?==/',
                 '/(  \n)/',
+                '/\n(?!\n)/',
             );
             
             $headingRep = array(
@@ -187,7 +196,8 @@
                 "<h3>$1</h3>",
                 "<h1>$1</h1>",
                 "<h1>$1 <small>$2</small></h1>",
-                "<br/><br/>",
+                "<br/>" . PHP_EOL,
+                "<br/>" . PHP_EOL,
             );
             
             return preg_replace($headingReg, $headingRep, $string);
@@ -219,10 +229,14 @@
                 }
                 else if (count($strings) == 3)
                 {
+                    $str = strtolower($location);
+                    
                     $linkName = $strings[0];
                     $location = $strings[1];
-                    if (strtolower($location) == "instagram")
+                    if ($str == "instagram")
                         $linkLocation = "https://instagram.com/" . $strings[2];
+                    else if ($str == "direct")
+                        $linkLocation = $strings[2];
                 }
                 else
                 {
@@ -248,13 +262,21 @@
         {
             $file = file_get_contents(Config::$contentDirectory . "/" . $path);
             
-            $file = Utility::parseLinks($file);
             
+            /*
             $file = Utility::parseHeadings($file);
             
             $file = Utility::resolveDataBlocks($file);
             
             return Utility::wikify($file);
+            */
+            
+            $pd = new Parsedown();
+            
+            $file = $pd->text($file);
+            $file = Utility::parseLinks($file);
+            
+            return $file;
         }
         
         private static $idCounter = 0;

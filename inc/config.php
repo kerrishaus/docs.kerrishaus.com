@@ -9,6 +9,6 @@
         
         public static $contentDirectory = "wiki-content";
         
-        public static $debug = true;
+        public static $debug = false;
     };
 ?>

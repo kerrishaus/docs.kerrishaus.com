@@ -52,6 +52,8 @@
                     echo "<title>Kerris Haus Docs</title>" . PHP_EOL;
             }
         ?>
+        
+        <meta name="theme-color" content="#14161D">
     </head>
     
     <body>
@@ -117,69 +119,100 @@
                     </div>
                     -->
                     
-                    <div class='mobile-breadcrumbs'>
-                        <ul>
-                            <?php echo $wiki->buildBreadcrumbsHTML(); ?>
-                        </ul>
-                    </div>
+                    <?php 
+                        $crumbs = $wiki->buildBreadcrumbsHTML();
+                        
+                        if ($crumbs != NULL)
+                        {
+                            echo "
+                            <div class='mobile-breadcrumbs'>
+                                <ul>
+                                    {$crumbs}
+                                </ul>
+                            </div>";
+                        }
+                    ?>
                     
                 <?php
                     if (!empty($_GET['page']))
                     {
+                        // this should only ever happen if the current file is a topic landing page
+                        // it will display the list of files in the topic.
                         if ($wiki->currentFile == null)
                         {
-                            $file = null;
+                            $files = Utility::scanDirectoryRecursive(Config::$contentDirectory . "/{$wiki->currentDirectory}");
                             
-                            if (file_exists(Config::$contentDirectory . "/{$wiki->currentDirectory}/index.html"))
-                                $file = Utility::includeFile($wiki->currentDirectory . "/index.html");
-                                
-                            if (empty($file))
+                            if ($files)
                             {
-                                $files = Utility::scanDirectoryRecursive(Config::$contentDirectory . "/{$wiki->currentDirectory}");
-                                
                                 $count = count($files);
                                 
-                                echo "<h1>{$count} pages in this section:</h1>" . PHP_EOL . "<ul>";
+                                echo "<h1>{$count} pages in {$wiki->currentDirectory}:</h1>" . PHP_EOL . "<ul>";
                                 
                                 foreach ($files as $file)
                                 {
                                     if (is_dir($file))
                                         continue;
-                                    
+                                        
+                                    $fileName = substr($file, 0, strrpos($file, "."));
+                                        
                                     if (Config::$debug)
-                                        echo "<li><a href='https://docs.kerrishaus.com/{$wiki->currentDirectory}/{$file}'>" . Utility::parsePageName($file) . "</a> <span class='text-muted'>({$file})</span></li>" . PHP_EOL;
+                                        echo "<li><a href='https://docs.kerrishaus.com/{$wiki->currentDirectory}/{$fileName}'>" . Utility::parsePageName($file) . "</a> <span class='text-muted'>({$file})</span></li>" . PHP_EOL;
                                     else
-                                        echo "<li><a href='https://docs.kerrishaus.com/{$wiki->currentDirectory}/{$file}'>" . Utility::parsePageName($file) . "</a></li>" . PHP_EOL;
+                                        echo "<li><a href='https://docs.kerrishaus.com/{$wiki->currentDirectory}/{$fileName}'>" . Utility::parsePageName($file) . "</a></li>" . PHP_EOL;
                                 }
                                     
                                 echo "</ul>" . PHP_EOL;
                             }
-                            else
-                                echo $file;
                         }
-                        else // include the section page
+                        else // include either the section header, or 
                         {
                             $file = Utility::includeFile($wiki->fullParsedPath);
                             if (empty($file))
+                            {
                                 if (file_exists($wiki->fullParsedPath))
-                                    echo "<h1>This page is empty.</h1>" . PHP_EOL;
+                                    echo "<h1>Future home of something cool.</h1>" . PHP_EOL;
                                 else
-                                    echo "<h1>404 &bull; Page not found.</h1>" . PHP_EOL;
+                                    echo "<h1 class='notFoundPageHeading'>404 &bull; Page not found.</h1>" . PHP_EOL;
+                            }
                             else
+                            {
                                 echo $file;
+                                
+                                echo "
+                                <div id='page_authors' class='' style='margin-top:20px;padding-top: 20px;border-top: 1px solid #696969'>
+                                    <abbr title='Credits for page content.'><i class='fa fa-user'></i></abbr> This page was authored by <a href='https://instagram.com/Huntress790'>Huntress</a>.
+                                </div>
+                                ";
+                            }
                         }
                     }
-                    else
+                    else // landing page
                     {
+                        $files = Utility::scanDirectory(Config::$contentDirectory . "/{$wiki->currentDirectory}");
+                        $count = count($files);
+                        
                         echo "
-                            <h1>Welcome to the Kerris Haus wiki!</h1>
-                            <p>Here you'll find all public information about, for, around, whatever, with relation to the house.</p>
+                        <center>
+                            <h1>Kerris Haus Docs</h1>
+                            <h4>Chose from {$count} topics:</h4>
+                            
+                            <hr/>
+                            
+                            <div class='topicList'>
                         ";
+                        
+                        foreach ($files as $file)
+                        {
+                            if (is_dir($file))
+                                continue;
+                            
+                            echo "<a href='https://docs.kerrishaus.com/{$file}'>" . Utility::parsePageName($file) . "</a>" . PHP_EOL;
+                        }
+                            
+                        echo "</div>
+                        </center>" . PHP_EOL;
                     }                    
                 ?>
-                    <div id='page_authors' class='' style='margin-top:20px;padding-top: 20px;border-top: 1px solid #696969'>
-                        <abbr title='Credits for page content.'><i class='fa fa-user'></i></abbr> This page was authored by <a href='https://instagram.com/Huntress790'>Huntress</a>.
-                    </div>
                 </div>
             </div>
             
@@ -190,7 +223,7 @@
                 echo "Directory: " . $wiki->currentDirectory . "<br/>" . PHP_EOL;
                 echo "File: " . $wiki->currentFile . "<br/>" . PHP_EOL;
                 echo "Full Path: " . $wiki->fullParsedPath . "<br/>" . PHP_EOL;
-                //echo "Modify Date: " . filemtime($wiki->parseCurrentPath()) . "<br/>" . PHP_EOL;
+                echo "Last Update: " . (Utility::relativeDate(filemtime(Config::$contentDirectory . "/" . $wiki->fullParsedPath)) ?? "Unknown") . "<br/>" . PHP_EOL;
                 echo "Load Time: " . (microtime(true) - $start_time) . "<br/>" . PHP_EOL;
             ?>
                 <hr/>
