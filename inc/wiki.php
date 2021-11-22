@@ -202,15 +202,23 @@
             {
                 $newTopic = new Topic($topic['name'], null, $this);
                 
+                $currentTopic = explode('/', $this->currentDirectory);
+                $currentTopic = count($currentTopic) > 1 ? $currentTopic[count($currentTopic) - 2] : $currentTopic[0];
+                
+                $topicCurrent = strtolower($newTopic->name) == strtolower($currentTopic);
+                
                 foreach ($topic['sections'] as $section)
                 {
                     $newSection = new Section($section['name'], null, $section['href']);
 
-                    $ned = explode('/', $this->currentDirectory);
-                    $ned = $ned[count($ned) - 1];
-                    
-                    if ($section['name'] == $ned)
-                        $newSection->current = true;
+                    if ($topicCurrent)
+                    {
+                        $ned = explode('/', $this->currentDirectory);
+                        $ned = $ned[count($ned) - 1];
+                        
+                        if ($section['name'] == $ned)
+                            $newSection->current = true;
+                    }
                     
                     $newTopic->addSection($newSection);
                     
@@ -218,7 +226,7 @@
                     {
                         $newPage = new Page($page['file'], null, $page['href']);
                         
-                        if ($page['file'] == $this->currentFile)
+                        if ($page['file'] == $this->currentFile && $newSection->current)
                             $newPage->current = true;
                         
                         $newSection->addPage($newPage);
