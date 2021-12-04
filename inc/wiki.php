@@ -205,7 +205,7 @@
                 $currentTopic = explode('/', $this->currentDirectory);
                 $currentTopic = count($currentTopic) > 1 ? $currentTopic[count($currentTopic) - 2] : $currentTopic[0];
                 
-                $topicCurrent = strtolower($newTopic->name) == strtolower($currentTopic);
+                $topicCurrent = strtolower($topic['name']) == strtolower($currentTopic);
                 
                 foreach ($topic['sections'] as $section)
                 {

@@ -147,6 +147,8 @@
             {
                 if (is_file($file))
                     $string2 = str_replace(' ', '_', $string) . ".html";
+                else
+                    $string2 = $string;
                 
                 if (basename($file) == $string2)
                     return $file;

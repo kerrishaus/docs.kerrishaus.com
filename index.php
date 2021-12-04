@@ -25,10 +25,14 @@
 <html lang="en">
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1">
-    
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css" />
+        <meta name="content-language" content="en">
+        <meta name="author" content="Kerris Haus">
+        <meta name="theme-color" content="#14161D">
+        
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+        
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css" />
         <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
     
         <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -52,8 +56,6 @@
                     echo "<title>Kerris Haus Docs</title>" . PHP_EOL;
             }
         ?>
-        
-        <meta name="theme-color" content="#14161D">
     </head>
     
     <body>
@@ -71,11 +73,6 @@
                             </a>';
                         }
                     ?>
-                    
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbarCollapse" aria-expanded="false" aria-controls="navbar">
-                        <span class="sr-only">Toggle navigation</span>
-                        <i class="fa fa-user"></i>
-                    </button>
                     
                     <button type="button" class="navbar-toggle" aria-expanded="false" onclick='toggleSidebar()' aria-controls="sidebar">
                         <span class="sr-only">Toggle navigation</span>
@@ -101,11 +98,13 @@
             <div class='wiki-container'>
                 <div class='sidebar mobile-sidebar-hidden' id='sidebar'>
                     <div class='sidebar-content'>
+                        <!--
                         <div class='searchbar'>
                             <form class='form'>
                                 <input class='form-control' type='text' placeholder="press / to quick search" />
                             </form>
                         </div>
+                        -->
                         <?php
                             $wiki->buildSidebarHTML();
                         ?>
@@ -227,7 +226,7 @@
                 echo "Load Time: " . (microtime(true) - $start_time) . "<br/>" . PHP_EOL;
             ?>
                 <hr/>
-                Copyright &copy; 2021 <a href='https://kerrishaus.com'>Kerris Haus</a> &bull; Just for fun.
+                Copyright &copy; 2021 <a href='https://kerrishaus.com'>Kerris Haus</a> &bull; Inspired to inspire.
             </div>
         </div>
     </body>
