@@ -4,6 +4,14 @@
 
     class Utility
     {
+        static function getLastModified($file)
+        {
+            if (file_exists($file))
+                return Utility::relativeDate(filemtime($file));
+            else
+                return "Sometime in the future.";
+        }
+        
         // Scans one single level in $directory
         static function scanDirectory($directory = ".")
         {

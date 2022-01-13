@@ -265,7 +265,7 @@
                     $content .= "<li><span>&gt;</span></li>" . PHP_EOL . "<li class='active'><a href='#'>" . Utility::parsePageName($this->currentFile) . "</a></li>" . PHP_EOL;
                 }
                 
-                $content .= "<li><span>(<a href='https://instagram.com/Huntress790'>Huntress</a>)</span></li>";
+                //$content .= "<li><span>(<a href='https://instagram.com/Huntress790'>Huntress</a>)</span></li>";
                 
                 return $content;
             }

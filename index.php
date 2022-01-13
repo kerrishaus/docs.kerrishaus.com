@@ -139,13 +139,49 @@
                         // it will display the list of files in the topic.
                         if ($wiki->currentFile == null)
                         {
+                            if (file_exists(Config::$contentDirectory . "/{$wiki->currentDirectory}/index.html") and filesize(Config::$contentDirectory . "/{$wiki->currentDirectory}/index.html") != 0)
+                            {
+                                $file = Utility::includeFile($wiki->fullParsedPath . "index.html");
+                                if (empty($file))
+                                    die("shoot");
+                                else 
+                                    echo $file . "<hr/>";
+                            }
+                            
                             $files = Utility::scanDirectoryRecursive(Config::$contentDirectory . "/{$wiki->currentDirectory}");
                             
                             if ($files)
                             {
-                                $count = count($files);
+                                $fileCount = 0;
+                                $directoryCount = 0;
                                 
-                                echo "<h1>{$count} pages in {$wiki->currentDirectory}:</h1>" . PHP_EOL . "<ul>";
+                                foreach ($files as $file)
+                                    if (is_dir($file))
+                                        $directoryCount++;
+                                    else
+                                        $fileCount++;
+                                
+                                if ($directoryCount > 0) 
+                                {
+                                    echo "<h1>{$directoryCount} sections in " . ucfirst($wiki->currentDirectory) . ":</h1>" . PHP_EOL . "<ul>";
+                                    
+                                    foreach ($files as $section)
+                                    {
+                                        if (!is_dir($section))
+                                            continue;
+                                            
+                                        $fileName = substr($section, strrpos($section, '/') + 1, strlen($section));
+                                            
+                                        if (Config::$debug)
+                                            echo "<li><a href='https://docs.kerrishaus.com/{$wiki->currentDirectory}/{$fileName}'>" . Utility::parsePageName($section) . "</a> <span class='text-muted'>({$section})</span></li>" . PHP_EOL;
+                                        else
+                                            echo "<li><a href='https://docs.kerrishaus.com/{$wiki->currentDirectory}/{$fileName}'>" . Utility::parsePageName($section) . "</a></li>" . PHP_EOL;
+                                    }
+                                }
+                                
+                                echo "</ul>";
+                                
+                                echo "<h1>{$fileCount} pages in " . ucfirst($wiki->currentDirectory) . ":</h1>" . PHP_EOL . "<ul>";
                                 
                                 foreach ($files as $file)
                                 {
@@ -222,11 +258,11 @@
                 echo "Directory: " . $wiki->currentDirectory . "<br/>" . PHP_EOL;
                 echo "File: " . $wiki->currentFile . "<br/>" . PHP_EOL;
                 echo "Full Path: " . $wiki->fullParsedPath . "<br/>" . PHP_EOL;
-                echo "Last Update: " . (Utility::relativeDate(filemtime(Config::$contentDirectory . "/" . $wiki->fullParsedPath)) ?? "Unknown") . "<br/>" . PHP_EOL;
+                echo "Last Update: " . Utility::getLastModified(Config::$contentDirectory . "/" . $wiki->fullParsedPath) . "<br/>" . PHP_EOL;
                 echo "Load Time: " . (microtime(true) - $start_time) . "<br/>" . PHP_EOL;
             ?>
                 <hr/>
-                Copyright &copy; 2021 <a href='https://kerrishaus.com'>Kerris Haus</a> &bull; Inspired to inspire.
+                Copyright &copy; 2021 <a href='https://kerrishaus.com'>Kerris Haus</a> &bull; <?php echo file_get_contents("https://api.kerrishaus.com/sparkle"); ?>
             </div>
         </div>
     </body>
