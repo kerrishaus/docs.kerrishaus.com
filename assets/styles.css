@@ -326,11 +326,18 @@ tr:last-child td:last-child
     width: 100%;
 }
 
+.wiki-debug-footer
+{
+    background-color: black;
+    padding-bottom: 20px;
+}
+
 .wiki-footer
 {
     background-color: black;
-    padding: 10px;
-    padding-bottom: 20px;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
 }
 
 .nav>li>span 
