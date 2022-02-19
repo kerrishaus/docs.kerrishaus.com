@@ -251,18 +251,25 @@
                 </div>
             </div>
             
-            <div class='wiki-footer'>
-                <p>Debug Information</p>
             <?php
-                echo "Raw: " . $wiki->currentPage . "<br/>" . PHP_EOL;
-                echo "Directory: " . $wiki->currentDirectory . "<br/>" . PHP_EOL;
-                echo "File: " . $wiki->currentFile . "<br/>" . PHP_EOL;
-                echo "Full Path: " . $wiki->fullParsedPath . "<br/>" . PHP_EOL;
-                echo "Last Update: " . Utility::getLastModified(Config::$contentDirectory . "/" . $wiki->fullParsedPath) . "<br/>" . PHP_EOL;
-                echo "Load Time: " . (microtime(true) - $start_time) . "<br/>" . PHP_EOL;
+                if (Config::$debug)
+                {
+                    echo "<div class='wiki-debug-footer'>";
+                    echo "<p>Debug Information</p>";
+                    echo "Raw: " . $wiki->currentPage . "<br/>" . PHP_EOL;
+                    echo "Directory: " . $wiki->currentDirectory . "<br/>" . PHP_EOL;
+                    echo "File: " . $wiki->currentFile . "<br/>" . PHP_EOL;
+                    echo "Full Path: " . $wiki->fullParsedPath . "<br/>" . PHP_EOL;
+                    echo "Last Update: " . Utility::getLastModified(Config::$contentDirectory . "/" . $wiki->fullParsedPath) . "<br/>" . PHP_EOL;
+                    echo "Load Time: " . (microtime(true) - $start_time) . "<br/>" . PHP_EOL;
+                    echo "<hr/>";
+                    echo "</div>";
+                }
             ?>
-                <hr/>
-                Copyright &copy; 2021 <a href='https://kerrishaus.com'>Kerris Haus</a> &bull; <?php echo file_get_contents("https://api.kerrishaus.com/sparkle"); ?>
+            
+            <div class='wiki-footer'>
+                <div><?php echo file_get_contents("https://api.kerrishaus.com/sparkle"); ?></div>
+                <div>Copyright &copy; 2021 <a href='https://kerrishaus.com'>Kerris Haus</a></div>
             </div>
         </div>
     </body>
