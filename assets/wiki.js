@@ -1,5 +1,7 @@
 var sidebarHidden = true;
 
+var previousScrollLocation = 0;
+
 function toggleSidebar()
 {
     if (sidebarHidden)
@@ -14,14 +16,28 @@ function hideSidebar()
 {
     document.getElementById('sidebar').classList.add("mobile-sidebar-hidden");
     document.getElementById('wikiContent').classList.remove("mobile-content-hidden");
-    console.log("done");
+    
+    $("html").removeClass("smooth-scroll");
+    $(window).scrollTop(previousScrollLocation);
+    $("html").addClass("smooth-scroll");
+    
+    console.log("put away the menu");
 }
 
 function showSidebar()
 {
+    previousScrollLocation = $(window).scrollTop();
+    
+    $("html").removeClass("smooth-scroll");
+    
+    $("html").addClass("smooth-scroll");
+    
+    console.log($("div.page-list-item.active").html());
+    console.log($("div.page-list-item.active")[0].getBoundingClientRect());
+    
     document.getElementById('sidebar').classList.remove("mobile-sidebar-hidden");
     document.getElementById('wikiContent').classList.add("mobile-content-hidden");
-    console.log("done");
+    console.log("got the menu");
 }
 
 function focusTopicSection(sectionID)
