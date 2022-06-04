@@ -257,12 +257,12 @@
                         continue;
                     
                     $directoryChain .= $directory . "/";
-                    $content .= "<li><span>&gt;</span></li>" . PHP_EOL . "</li><li><a href='https://docs.kerrishaus.com/{$directoryChain}'>" . Utility::parseSectionName($directory) . "</a></li>" . PHP_EOL;
+                    $content .= "</li><li><a href='https://docs.kerrishaus.com/{$directoryChain}'>" . Utility::parseSectionName($directory) . "</a></li>" . PHP_EOL;
                 }
                 
                 if ($this->currentFile != null)
                 {
-                    $content .= "<li><span>&gt;</span></li>" . PHP_EOL . "<li class='active'><a href='#'>" . Utility::parsePageName($this->currentFile) . "</a></li>" . PHP_EOL;
+                    $content .= "<li class='active'><a href='#'>" . Utility::parsePageName($this->currentFile) . "</a></li>" . PHP_EOL;
                 }
                 
                 //$content .= "<li><span>(<a href='https://instagram.com/Huntress790'>Huntress</a>)</span></li>";

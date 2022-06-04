@@ -83,3 +83,8 @@ function loadPageContent(pageLocation)
     var contentArea = document.getElementById("wikiContent");
     contentArea.innerHTML = data;
 }
+
+$(document).ready(function()
+{
+    $("div.page-list-item.active")[0].scrollIntoView();
+});

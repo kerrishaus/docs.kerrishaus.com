@@ -1,7 +1,12 @@
 <?php 
     $start_time = microtime(true);
     
-    require_once("inc/wiki.php");
+    require_once("../inc/config.php");
+    
+    Config::$contentDirectory = $_SERVER['DOCUMENT_ROOT'] . "/corporate/wiki-content";
+    Config::$debug = true;
+    
+    require_once("../inc/wiki.php");
     
     $wiki = new WikiBuilder();
 ?>

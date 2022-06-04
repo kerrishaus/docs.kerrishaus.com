@@ -134,7 +134,7 @@
         
         static function parseTopicName($page)
         {
-            return ucwords(str_replace('_', ' ', $page));
+            return strtoupper(str_replace('_', ' ', $page));
         }
         
         static function makedbsafe($string)
@@ -268,10 +268,23 @@
             return $string;
         }
         
+        static function resolveEndpoints($file)
+        {
+            // @post=/portal/lists/update
+            
+            return preg_replace("<@(post|get|delete|put)=((\/[a-zA-Z0-9_]*)+)>i", "<div class='bar-group'>
+                                                                                    <div class='bar-group-addon'>
+                                                                                        <strong>$1</strong>
+                                                                                    </div>
+                                                                                    <div>
+                                                                                        $2
+                                                                                    </div>
+                                                                                </div>", $file);
+        }
+        
         static function includeFile($path)
         {
             $file = file_get_contents(Config::$contentDirectory . "/" . $path);
-            
             
             /*
             $file = Utility::parseHeadings($file);
@@ -285,6 +298,7 @@
             
             $file = $pd->text($file);
             $file = Utility::parseLinks($file);
+            $file = Utility::resolveEndpoints($file);
             
             return $file;
         }

@@ -25,7 +25,6 @@ body
     margin-top: 50px;
     background-color: transparent;
     color: white;
-    font-family: Montserrat;
 }
 
 .background
@@ -88,20 +87,26 @@ code
 {
     display: flex;
     position: relative;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
 }
 
 .wiki-container > .sidebar
 {
     background: linear-gradient(185deg, var(--PRIMARY), black);
-    width: 18%;
+    width: 20%;
     padding: 10px;
     
     max-height: 100%;
-    max-height: calc(100vh - 50px);
+    max-height: calc(100vh - 100px);
     overflow-x: hidden;
     
     position: sticky;
     top: 50px;
+}
+
+.wiki-container > .sidebar > .sidebar-content
+{
 }
 
 .wiki-container > .wiki-content
@@ -111,8 +116,10 @@ code
     padding: 20px;
     background: linear-gradient(35deg, var(--PRIMARY), #46535cc4);
     
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
+    border-radius: 4px;
+    
+    max-height: calc(100vh - 100px);
+    overflow-y: scroll;
 }
 
 .searchbar
@@ -264,9 +271,15 @@ table
     border-radius: 10px;
 }
 
+table > thead > tr > th
+{
+    border-bottom: 1px solid gray;
+    background-color: #a1a1a169;
+}
+
 td, tr, th
 {
-    padding: 5px;
+    padding: 5px 10px;
     background-color: #bbbbbb24;
 }
 
@@ -294,6 +307,13 @@ tr:last-child td:last-child
     -webkit-border-radius: 0 0 5px 0;
 }
 
+h1 > .bar-group
+{
+    display: inline-flex;
+    position: relative;
+    top: -5px;
+}
+
 .bar-group 
 {
     display: flex;
@@ -308,15 +328,23 @@ tr:last-child td:last-child
     line-height: 1;
     color: #555;
     text-align: center;
-    background-color: #11141B;
-    border: 1px solid #363A44;
+    background-color: #bbbbbb24;
+    color: white;
+}
+
+.bar-group > :first-child
+{
+    border-radius: 4px 0px 0px 4px;
+}
+
+.bar-group > :last-child
+{
+    border-radius: 0px 4px 4px 0px;
 }
 
 .bar-group > .bar-group-addon
 {
-    border-radius: 4px 0px 0px 4px;
-    background-color: #777777;
-    color: white;
+    background-color: #a1a1a169;
 }
 
 .bar-group > .bar-group-text
@@ -338,23 +366,56 @@ tr:last-child td:last-child
 .wiki-footer
 {
     background-color: black;
-    padding: 20px;
+    padding: 15px;
     display: flex;
     justify-content: space-between;
 }
 
-.nav>li>span 
+.navbar-brand:not(:last-child)
 {
-    position: relative;
-    display: block;
-    padding: 10px 15px;
-    color: #9d9d9d;
+    background-color: black;
 }
 
-.navbar-nav>li>span 
+.nav > li:first-child > a
 {
-    padding-top: 15px;
-    padding-bottom: 15px;
+    padding-left: 15px;
+}
+
+.nav > li:last-child > a
+{
+    background-color: transparent !important;
+}
+
+.nav > li > a
+{
+    padding-left: 20px;
+    display: inline-block;
+    background-color: black;
+    white-space: nowrap;
+}
+
+.nav > li:not(:last-child)
+{
+    /*clip-path: polygon(0 100%, 100% 10px, 0 0);*/
+}
+
+.nav > li:not(:last-child):after
+{
+    content: '';
+    display: inline-block;
+    
+    width: 10px;
+    height: 50px;
+    margin: -10px;
+    
+    background-color: black !important;
+    
+    position: relative;
+    top: 10px;
+    left: 10px;
+    z-index: 10;
+    
+    clip-path: polygon(0 100%, 100% 50%, 0 0);
 }
 
 #toc_container 
@@ -427,13 +488,14 @@ tr:last-child td:last-child
 /* Track */
 ::-webkit-scrollbar-track 
 {
-  background: #141726;
+  background: transparent;
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb 
 {
-  background: #343B51;
+    background: #343B51;
+    border-radius: 4px;
 }
 
 /* Handle on hover */
@@ -447,6 +509,7 @@ tr:last-child td:last-child
     color: #949494;
 }
 
+.wiki-content > h1:nth-child(2),
 .wiki-content > h1:nth-child(3)
 {
     margin-top: 0px;
