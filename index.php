@@ -12,6 +12,15 @@
         $pm = new Parsedown();
         $file = $pm->text($file);
         
+        $file = preg_replace("<@(post|get|delete|put)=((\/[a-zA-Z0-9_]*)+)>i", "<div class='bar-group'>
+                                                                                <div class='bar-group-addon'>
+                                                                                    <strong>$1</strong>
+                                                                                </div>
+                                                                                <div>
+                                                                                    $2
+                                                                                </div>
+                                                                            </div>", $file);
+        
         return $file;
     }
 
@@ -235,6 +244,8 @@
         <link rel="stylesheet" type="text/css" href="https://kerrishaus.com/assets/fontawesome/6.1.1/css/all.min.css" />
         <link rel="stylesheet" type="text/css" href="https://docs.kerrishaus.com/assets/styles.css" />
         <link rel="stylesheet" type="text/css" href="https://docs.kerrishaus.com/assets/person.css" />
+        <link rel="stylesheet" type="text/css" href="https://docs.kerrishaus.com/assets/bar-group.css" />
+        <link rel="stylesheet" type="text/css" href="https://docs.kerrishaus.com/assets/table.css" />
         <link rel="stylesheet" type="text/css" href="https://docs.kerrishaus.com/assets/table_of_contents.css" />
         <link rel='stylesheet' type="text/css" href='https://kerrishaus.com/assets/styles/footer.css' />
         

@@ -1,0 +1,49 @@
+h1 > .bar-group
+{
+    display: inline-flex;
+    position: relative;
+    top: -5px;
+}
+
+.bar-group 
+{
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.bar-group > div
+{
+    padding: 6px 12px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1;
+    color: #555;
+    text-align: center;
+    background-color: #bbbbbb24;
+    color: white;
+}
+
+.bar-group > :first-child
+{
+    border-radius: 4px 0px 0px 4px;
+}
+
+.bar-group > :last-child
+{
+    border-radius: 0px 4px 4px 0px;
+}
+
+.bar-group > .bar-group-addon
+{
+    background-color: #a1a1a169;
+}
+
+.bar-group > .bar-group-text
+{
+    color: #C7254E;
+    font-family: monospace;
+    text-align: left;
+    border-radius: 0px 4px 4px 0px;
+    border-left: none;
+    width: 100%;
+}

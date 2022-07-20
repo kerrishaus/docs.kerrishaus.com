@@ -1,0 +1,46 @@
+table
+{
+    border-radius: 10px;
+    
+    -webkit-border-horizontal-spacing: 0px;
+    -webkit-border-vertical-spacing: 0px;
+    
+    width: 100%;
+}
+
+table > thead > tr > th
+{
+    border-bottom: 1px solid gray;
+    background-color: #a1a1a169;
+    text-align: left;
+}
+
+td, tr, th
+{
+    padding: 5px 10px;
+    background-color: #bbbbbb24;
+}
+
+th:first-child
+{
+    border-radius: 5px 0 0 0;
+}
+
+th:last-child
+{
+    border-radius: 0 5px 0 0;
+}
+
+tr:last-child td:first-child
+{
+    border-radius: 0 0 0 5px;
+    -moz-border-radius: 0 0 0 5px;
+    -webkit-border-radius: 0 0 0 5px;
+}
+
+tr:last-child td:last-child
+{
+    border-radius: 0 0 5px 0;
+    -moz-border-radius: 0 0 5px 0;
+    -webkit-border-radius: 0 0 5px 0;
+}
