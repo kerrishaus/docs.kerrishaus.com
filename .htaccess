@@ -4,5 +4,6 @@ Options -Indexes
 ErrorDocument 404 /404.php
 
 RewriteEngine on
-RewriteCond %{REQUEST_FILENAME} !(index.php|search.php\?q=.*|/blog(/.*)?|/assets/.*)
+RewriteRule "^(.*)/$" /$1 [L,R=301]
+RewriteCond %{REQUEST_FILENAME} !(index.php|404.php|search.php\?q=.*|/assets/.*)
 RewriteRule ^(.*)$ /index.php?page=$1 [NC,L,QSA]

@@ -1,90 +1,113 @@
-var sidebarHidden = true;
-
-var previousScrollLocation = 0;
-
-function toggleSidebar()
+$(document).ready(function(event)
 {
-    if (sidebarHidden)
-        showSidebar();
-    else
-        hideSidebar();
-        
-    sidebarHidden = !sidebarHidden;
-}
-
-function hideSidebar()
-{
-    document.getElementById('sidebar').classList.add("mobile-sidebar-hidden");
-    document.getElementById('wikiContent').classList.remove("mobile-content-hidden");
-    
-    $("html").removeClass("smooth-scroll");
-    $(window).scrollTop(previousScrollLocation);
-    $("html").addClass("smooth-scroll");
-    
-    console.log("put away the menu");
-}
-
-function showSidebar()
-{
-    previousScrollLocation = $(window).scrollTop();
-    
-    $("html").removeClass("smooth-scroll");
-    
-    $("html").addClass("smooth-scroll");
-    
-    console.log($("div.page-list-item.active").html());
-    console.log($("div.page-list-item.active")[0].getBoundingClientRect());
-    
-    document.getElementById('sidebar').classList.remove("mobile-sidebar-hidden");
-    document.getElementById('wikiContent').classList.add("mobile-content-hidden");
-    console.log("got the menu");
-}
-
-function focusTopicSection(sectionID)
-{
-    var topicSection = document.getElementById(sectionID);
-    topicSection.classList.add("active");
-    
-    return true;
-}
-
-function defocusTopicSection(sectionID)
-{
-    var topicSection = document.getElementById(sectionID);
-    topicSection.classList.remove("active");
-    
-    return true;
-}
-
-function swapFocusToSection(sectionID)
-{
-    var currentFocusID = document.getElementsByClassName("active").item(0).id;
-    
-    if (currentFocusID != sectionID)
+    $(document).keydown((event) =>
     {
-        defocusTopicSection(currentFocusID);
-        focusTopicSection(sectionID);
+        if (event.code == "Slash")
+        {
+            if ($("#searchbar").is(":focus"))
+                return;
         
-        loadPageContent(sectionID);
+            $("#searchbar").focus();
+            
+            event.preventDefault();
+            event.stopPropagation();
+            
+            return;
+        }
+        else if (event.code == "Escape")
+        {
+            if ($("#searchbar").is(":focus"))
+            {
+                $("#searchbar").val("");
+                $("#searchbar").blur();
+                
+                event.preventDefault();
+                event.stopPropagation();
+                
+                return;
+            }
+        }
+    });
+    
+    $(document).on("click", ".links > div > h1", (event) =>
+    {
+        /*
+        if ($(event.target).parent().hasClass("active"))
+            return;
+    
+        $(".links > div.active > ul").slideUp();
+        $(".links > div.active").removeClass("active");
         
-        return true;
-    }
+        $(event.target).parent().addClass("active");
+        $(event.target).next().slideDown();
+        */
+        
+        $(event.target).parent().toggleClass("active");
+        $(event.target).next().slideToggle();
+    });
     
-    return false;
-}
-
-function loadPageContent(pageLocation)
-{
-    xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("GET", "http://docs.kerrishaus.com/" + pageLocation, false);
-    xmlhttp.send();
-    var data = xmlhttp.responseText;
+    $("#sidebar-toggle-button").click((event) =>
+    {
+        $(".sidebar").toggleClass("open");
+        $(".wiki-content-container").toggleClass("open");
+    });
     
-    var contentArea = document.getElementById("wikiContent");
-    contentArea.innerHTML = data;
-}
+    $(".wiki-content").click((event) =>
+    {
+        if ($(".sidebar").hasClass("open"))
+        {
+            $("#sidebar-toggle-button").click();
+            
+            event.preventDefault();
+            event.stopPropagation();
+        }
+    });
+    
+    $(document).on("click", ".nav-link", (event) =>
+    {
+        event.preventDefault();
+        event.stopPropagation();
+    
+        let href = $(event.target).attr('href').substr(28);
+        
+        $(".wiki-content").addClass("loading");
+        
+        $.get("https://docs.kerrishaus.com/" + href + "&ajax", function(data)
+        {
+            if (data.status == 200)
+            {
+                $("#navbar").html(data.navbar);
+                $(".wiki-content").html(data.content);
+                
+                if (data.webPreviousDirectory)
+                {
+                    if (document.getElementById("webPreviousDirectory") === null)
+                        $("<a id='webPreviousDirectory' class='nav-link'></a>").insertAfter(".searchbar");
+                
+                    $("#webPreviousDirectory").attr("href", data.webPreviousDirectory);
+                    $("#webPreviousDirectory").html("<i class='fas fa-arrow-left' aria-hidden='true'></i> " + data.webPreviousDirectoryName);
+                }
+                else
+                    $("#webPreviousDirectory").remove();
 
-$(document).ready(function()
-{
-    $("div.page-list-item.active")[0].scrollIntoView();
+                $(".links").html(data.links);
+
+                window.history.pushState({}, '', data.currentPageHref);
+                document.title = data.title;
+                document.body.scrollTop = document.documentElement.scrollTop = 0;
+            }
+            else
+                alert("error2");
+        }, "json")
+        .fail(function()
+        {
+            alert("error");
+        })
+        .always(function()
+        {
+            $(".wiki-content").removeClass("loading");
+            
+            console.log("complete");
+        });
+    });
 });
