@@ -184,7 +184,7 @@ ul
 
 .wiki-container > .sidebar > .links > div.active > h1::before
 {
-    transform: rotateZ(deg);
+    transform: rotateZ(0deg);
 }
 
 .wiki-container > .sidebar > .links > div > ul
