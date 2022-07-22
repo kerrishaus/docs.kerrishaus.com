@@ -30,7 +30,7 @@ body
     padding: 0px;
 }
 
-ul
+.wiki-container > .sidebar > .links > div > ul
 {
     list-style-type: none;
     margin-block-start: 0px;
