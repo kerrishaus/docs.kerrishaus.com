@@ -207,7 +207,7 @@
                 }
             }
             
-            return $containers . "<ul class='lonely-links'>{$pageLinks}</ul>";
+            return $containers . "<div class='lonely-links'><h1>Contents</h1><ul class='lonely-links'>{$pageLinks}</ul></div>";
         }
         
         $links = linksForDirectory($fileUri);
