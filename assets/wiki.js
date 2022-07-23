@@ -110,4 +110,16 @@ $(document).ready(function(event)
             console.log("complete");
         });
     });
+    
+        
+    $("#searchbar").on("keyup", function()
+    {
+        var value = $(this).val().toLowerCase();
+        $(".links .nav-link").filter(function()
+        {
+            // no parent version keeps the boxes
+            //$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            $(this).parent().toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+    });
 });
