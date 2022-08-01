@@ -4,13 +4,16 @@
     error_reporting(E_ALL);
     
     require_once("_parsedown.php");
+    require_once("_parsedownExtra.php");
+    require_once("_parsedownToc.php");
     
     function getFileContents(string $file): string
     {
         $file = file_get_contents($file);
         
-        $pm = new Parsedown();
-        $file = $pm->text($file);
+        $Parsedown = new \ParsedownToC();
+        // Parses '[toc]' tag to ToC if exists
+        $file = $Parsedown->text($file);
         
         $file = preg_replace("<@(post|get|delete|put)=((\/[a-zA-Z0-9_]*)+)>i", "<div class='bar-group'>
                                                                                 <div class='bar-group-addon'>
