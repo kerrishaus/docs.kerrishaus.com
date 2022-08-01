@@ -1,19 +1,18 @@
-#toc_container 
+#toc
 {
     background-color: #2b3853ba;
     border: 1px solid #4d7492;
     display: table;
     font-size: 95%;
-    margin: 1em;
-    padding: 20px;
     width: auto;
 }
 
-.toc_title 
+#toc > ul
 {
-    font-weight: 700;
-    text-align: center;
-    max-width: 100%;
-    margin: 0px;
-    margin-bottom: 20px;
+    padding: 10px 40px;
+}
+
+#toc > ul > li
+{
+    list-style-type: decimal;
 }
