@@ -9,22 +9,31 @@
     
     function getFileContents(string $file): string
     {
-        $file = file_get_contents($file);
-        
-        $Parsedown = new \ParsedownToC();
-        // Parses '[toc]' tag to ToC if exists
-        $file = $Parsedown->text($file);
-        
-        $file = preg_replace("<@(post|get|delete|put)=((\/[a-zA-Z0-9_]*)+)>i", "<div class='bar-group'>
-                                                                                <div class='bar-group-addon'>
-                                                                                    <strong>$1</strong>
-                                                                                </div>
-                                                                                <div>
-                                                                                    $2
-                                                                                </div>
-                                                                            </div>", $file);
-        
-        return $file;
+        try
+        {
+            $file = file_get_contents($file);
+
+            $pw = new ParsedownToC();
+            // Parses '[toc]' tag to ToC if exists
+            $file = $pw->text($file);
+            
+            $file = preg_replace("<@(post|get|delete|put)=((\/[a-zA-Z0-9_]*)+)>i", "<div class='bar-group'>
+                                        <div class='bar-group-addon'>
+                                            <strong>$1</strong>
+                                        </div>
+                                        <div>
+                                            $2
+                                        </div>
+                                    </div>", $file);
+
+            return $file;
+        }
+        catch (Exception $e)
+        {
+            exit("A fatal error was encountered. This error has not been logged. Please report this to <a href='mailto:webmaster@kerrishaus.com'>webmaster@kerrishaus.com</a>");
+        }
+            
+        return null;
     }
 
     // Scans one single level in $directory
