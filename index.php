@@ -13,7 +13,7 @@
         {
             $file = file_get_contents($file);
 
-            $pw = new ParsedownExtra();
+            $pw = new ParsedownToC();
             $file = $pw->text($file);
             
             $file = preg_replace("<@(post|get|delete|put)=((\/[a-zA-Z0-9_]*)+)>i", "<div class='bar-group'>
