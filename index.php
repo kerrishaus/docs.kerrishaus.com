@@ -14,6 +14,7 @@
             $file = file_get_contents($file);
 
             $pw = new ParsedownToC();
+            $pw->setTagToC("[__TOC__]");
             $file = $pw->text($file);
             
             $file = preg_replace("<@(post|get|delete|put)=((\/[a-zA-Z0-9_]*)+)>i", "<div class='bar-group'>
