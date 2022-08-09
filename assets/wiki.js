@@ -111,15 +111,20 @@ $(document).ready(function(event)
         });
     });
     
-        
     $("#searchbar").on("keyup", function()
     {
         var value = $(this).val().toLowerCase();
-        $(".links .nav-link").filter(function()
+        $(".links > div > ul > li > a.nav-link").filter(function()
         {
-            // no parent version keeps the boxes
-            //$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-            $(this).parent().toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            if ($(this).text().toLowerCase().indexOf(value) > -1)
+                $(this).parent().removeClass("hidden");
+            else
+                $(this).parent().addClass("hidden");
+        
+            if ($(this).parent().parent().children("li:not(.hidden)").length <= 0)
+                $(this).parent().parent().parent().hide();
+            else
+                $(this).parent().parent().parent().show();
         });
     });
 });
