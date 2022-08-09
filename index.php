@@ -179,6 +179,7 @@
                 {
                     if ($file == "." or
                         $file == ".." or
+                        $file == ".git" or
                         $file == "index.md")
                         continue;
                         
@@ -197,6 +198,7 @@
                             {
                                 if ($file_ == "." or
                                     $file_ == ".." or
+                                    $file_ == ".git" or
                                     $file_ == "index.md")
                                     continue;
                     
