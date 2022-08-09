@@ -14,6 +14,6 @@ Just clone the project files onto a lamp server and edit the configuration secti
 
 # Used by this project
 
-- [https://github.com/erusev/parsedown]
-- [https://github.com/erusev/parsedown-extra]
-- [https://github.com/KEINOS/parsedown-extension_table-of-contents/blob/master/Extension.php]
+- https://github.com/erusev/parsedown
+- https://github.com/erusev/parsedown-extra
+- https://github.com/KEINOS/parsedown-extension_table-of-contents/blob/master/Extension.php
