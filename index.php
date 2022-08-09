@@ -169,6 +169,7 @@
         {
             global $baseUri;
             global $contentBaseUri;
+            global $ignoredFiles;
             
             $containers = "";
             $pageLinks = "";
