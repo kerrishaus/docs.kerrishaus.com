@@ -7,7 +7,7 @@
     $ignoreFiles = [
         ".",
         "..",
-        "index.md",
+        "index.md"
     ];
 
     // end of configuration
