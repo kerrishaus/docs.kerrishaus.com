@@ -1,7 +1,23 @@
 <?php
-    ini_set('display_errors', 1);
-    ini_set('display_startup_errors', 1);
-    error_reporting(E_ALL);
+
+    // configuration section
+
+    $debug = false;
+
+    $ignoreFiles = [
+        ".",
+        "..",
+        "index.md",
+    ];
+
+    // end of configuration
+
+    if ($debug)
+    {
+        ini_set('display_errors', 1);
+        ini_set('display_startup_errors', 1);
+        error_reporting(E_ALL);
+    }
     
     require_once("_parsedown.php");
     require_once("_parsedownExtra.php");
@@ -177,10 +193,7 @@
             {
                 foreach ($files as $file)
                 {
-                    if ($file == "." or
-                        $file == ".." or
-                        $file == ".git" or
-                        $file == "index.md")
+                    if (in_array($file_, $ignoredFiles))
                         continue;
                         
                     $fileInfo = pathinfo("{$directory}/{$file}");
@@ -196,12 +209,9 @@
                             
                             foreach ($files_ as $file_)
                             {
-                                if ($file_ == "." or
-                                    $file_ == ".." or
-                                    $file_ == ".git" or
-                                    $file_ == "index.md")
+                                if (in_array($file_, $ignoredFiles))
                                     continue;
-                    
+                                
                                 $fileInfo_ = pathinfo("{$directory}/{$file}/{$file_}");
                                     
                                 $fname_ = htmlspecialchars(ucwords(str_replace("_", " ", $fileInfo_['filename'])));
