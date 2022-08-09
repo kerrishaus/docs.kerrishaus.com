@@ -1,8 +1,16 @@
 # docs.kerrishaus.com
-This project is designed to allow the easy distribution of information.
+This is unnamed custom wiki software for docs.kerrishaus.com.  
 
-# Server Requirements
+This project exists because MediaWiki did not support PHP 8.1 at the time.
+
+# How to use
+
+## Server Requirements
 - PHP 8.1
+
+## Installation
+
+Just clone the project files onto a lamp server and edit the configuration section to suit your needs.
 
 # Used by this project
 
