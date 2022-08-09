@@ -4,6 +4,9 @@
 
     $debug = false;
 
+    // this ignores files prefixed with .
+    $ignoreHiddenFiles = true;
+
     $ignoredFiles = [
         ".",
         "..",
@@ -170,6 +173,7 @@
             global $baseUri;
             global $contentBaseUri;
             global $ignoredFiles;
+            global $$ignoreHiddenFiles;
             
             $containers = "";
             $pageLinks = "";
@@ -194,7 +198,9 @@
             {
                 foreach ($files as $file)
                 {
-                    if (in_array($file, $ignoredFiles))
+                    if ($ignoreHiddenFiles and
+                        str_starts_with($file, '.')
+                    )
                         continue;
                         
                     $fileInfo = pathinfo("{$directory}/{$file}");
@@ -211,6 +217,11 @@
                             foreach ($files_ as $file_)
                             {
                                 if (in_array($file_, $ignoredFiles))
+                                    continue;
+                                
+                                if ($ignoreHiddenFiles and
+                                    str_starts_with($file_, '.')
+                                )
                                     continue;
                                 
                                 $fileInfo_ = pathinfo("{$directory}/{$file}/{$file_}");
