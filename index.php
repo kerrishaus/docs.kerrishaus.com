@@ -4,6 +4,9 @@
 
     $debug = false;
 
+    $baseUri = "https://docs.kerrishaus.com";
+    $contentBaseUri = "wiki-content"; // no leading or trailing slash, just the directory name
+
     // this ignores files prefixed with .
     $ignoreHiddenFiles = true;
 
@@ -98,9 +101,7 @@
 
     if (isset($_GET['page']))
     {
-        $baseUri = "https://docs.kerrishaus.com";
         $requestUri = $_GET['page'];
-        $contentBaseUri = "wiki-content"; // no leading or trailing slash, just the directory name
         
         $fileUri = "";
         
@@ -198,6 +199,9 @@
             {
                 foreach ($files as $file)
                 {
+                    if (in_array($file, $ignoredFiles))
+                        continue;
+                    
                     if ($ignoreHiddenFiles and
                         str_starts_with($file, '.')
                     )
