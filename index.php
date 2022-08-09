@@ -193,7 +193,7 @@
             {
                 foreach ($files as $file)
                 {
-                    if (in_array($file_, $ignoredFiles))
+                    if (in_array($file, $ignoredFiles))
                         continue;
                         
                     $fileInfo = pathinfo("{$directory}/{$file}");
