@@ -4,7 +4,7 @@
 
     $debug = false;
 
-    $ignoreFiles = [
+    $ignoredFiles = [
         ".",
         "..",
         "index.md"
