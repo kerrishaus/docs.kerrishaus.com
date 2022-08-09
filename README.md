@@ -3,7 +3,7 @@ This is unnamed custom wiki software for docs.kerrishaus.com.
 
 This project exists because MediaWiki did not support PHP 8.1 at the time.
 
-Content for the mainline site can be found on the [docs.kerrishaus.com-content](https://github.com/kerrishaus/docs.kerrishaus.com-content)
+Content for the mainline site can be found on the [docs.kerrishaus.com-content](https://github.com/kerrishaus/docs.kerrishaus.com-content).
 
 # How to use
 
