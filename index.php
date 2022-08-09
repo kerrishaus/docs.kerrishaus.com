@@ -173,7 +173,7 @@
             global $baseUri;
             global $contentBaseUri;
             global $ignoredFiles;
-            global $$ignoreHiddenFiles;
+            global $ignoreHiddenFiles;
             
             $containers = "";
             $pageLinks = "";
