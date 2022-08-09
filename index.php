@@ -289,6 +289,7 @@
         <link rel="stylesheet" type="text/css" href="https://docs.kerrishaus.com/assets/person.css" />
         <link rel="stylesheet" type="text/css" href="https://docs.kerrishaus.com/assets/bar-group.css" />
         <link rel="stylesheet" type="text/css" href="https://docs.kerrishaus.com/assets/table.css" />
+        <link rel="stylesheet" type="text/css" href="https://docs.kerrishaus.com/assets/markdown.css" />
         <link rel="stylesheet" type="text/css" href="https://docs.kerrishaus.com/assets/table_of_contents.css" />
         <link rel='stylesheet' type="text/css" href='https://kerrishaus.com/assets/styles/footer.css' />
         
