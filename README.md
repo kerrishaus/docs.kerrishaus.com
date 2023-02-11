@@ -7,6 +7,8 @@ Content for the mainline site can be found on the [docs.kerrishaus.com-content](
 
 # How to use
 
+I would not use this over MediaWiki unless you desire to be deeply unhappy.
+
 ## Server Requirements
 - PHP 8.1
 
