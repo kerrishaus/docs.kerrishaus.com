@@ -246,7 +246,7 @@
         if ($realFile !== null)
             $file = getFileContents($realFile);
         else
-            $file = "<div class='file-empty'><i class='fas fa-clock-rotate-left'></i><p>Future home of something cool.<p><small>This document hasn't been written yet.</small></div>";
+            $file = "<div class='file-empty'><i class='fas fa-clock-rotate-left'></i><p>This could be the future home of something great!<p><small>But this document hasn't been written yet.</small></div>";
         
         if (isset($_GET['ajax']))
         {
