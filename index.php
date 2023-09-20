@@ -1,22 +1,6 @@
 <?php
 
-    // configuration section
-
-    $debug = false;
-
-    $baseUri = "https://docs.kerrishaus.com";
-    $contentBaseUri = "wiki-content"; // no leading or trailing slash, just the directory name
-
-    // this ignores files prefixed with .
-    $ignoreHiddenFiles = true;
-
-    $ignoredFiles = [
-        ".",
-        "..",
-        "index.md"
-    ];
-
-    // end of configuration
+    require_once("./_docs.config.php");
 
     if ($debug)
     {
@@ -24,12 +8,13 @@
         ini_set('display_startup_errors', 1);
         error_reporting(E_ALL);
     }
-    
-    require_once("_parsedown.php");
-    require_once("_parsedownExtra.php");
-    require_once("_parsedownToc.php");
-    
-    function getFileContents(string $file): string
+
+    foreach ($phpDependencies as $dependency)
+        require_once($phpDependencyUrl . $dependency);
+
+    // Tries to get the contents of the file and parse them using Parsedown.
+    // Returns the parsed content as a giant string, or null if there was an error.   
+    function getFileContents(string $file): ?string
     {
         try
         {
@@ -169,6 +154,8 @@
                         </li>" . PHP_EOL;
         }
         
+        // This function is used to find the links for all pages in the
+        // current directory, as well as one level down in subdirectories.
         function linksForDirectory(string $directory): string
         {
             global $baseUri;
@@ -202,6 +189,7 @@
                     if (in_array($file, $ignoredFiles))
                         continue;
                     
+                    // TODO: I don't think is is necessary because . is usually in the $ignoredFiles list.
                     if ($ignoreHiddenFiles and
                         str_starts_with($file, '.')
                     )
@@ -292,17 +280,27 @@
         <link rel="stylesheet" type="text/css" href="https://docs.kerrishaus.com/assets/markdown.css" />
         <link rel="stylesheet" type="text/css" href="https://docs.kerrishaus.com/assets/table_of_contents.css" />
         <link rel="stylesheet" type="text/css" href="https://docs.kerrishaus.com/assets/code.css" />
-        <link rel='stylesheet' type="text/css" href='https://kerrishaus.com/assets/styles/footer.css' />
+        <link rel="stylesheet" type="text/css" href="https://kerrishaus.com/assets/styles/footer.css" />
         
         <noscript>
-            <link rel='stylesheet' type="text/css" href='https://docs.kerrishaus.com/assets/noscript.css' />
+            <link rel="stylesheet" type="text/css" href="https://docs.kerrishaus.com/assets/noscript.css" />
         </noscript>
         
         <script src="https://kerrishaus.com/assets/scripts/jquery-3.6.0.min.js"></script>
         <script src="https://docs.kerrishaus.com/assets/wiki.js"></script>
+
+        <?php foreach ($cssIncludes as $cssInclude): ?>
+            <link rel="stylesheet" type="text/css" href="<?= $cssInclude ?>" />
+        <?php endforeach; ?>
+
+        <?php foreach ($javascriptIncludes as $jsInclude): ?>
+            <script src="<?= $jsInclude ?>"></script>
+        <?php endforeach; ?>
         
         <?php if (!empty($currentPageTitle)): ?>
-            <title><?= htmlspecialchars($currentPageTitle) ?> &bull; Kerris Haus Docs</title>
+            <title>
+                <?= htmlspecialchars($currentPageTitle) ?> - Kerris Haus Docs
+            </title>
         <?php else: ?>
             <title>Kerris Haus Docs</title>
         <?php endif; ?>

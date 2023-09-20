@@ -2,5 +2,6 @@
 /corporate/wiki-content/
 /assets/backgrounds
 /assets/images
+_docs.config.php
 error_log
 .DS_Store
