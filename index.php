@@ -267,6 +267,14 @@
 <html lang="en">
     <head>
         <meta name="author" content="Kerris Haus">
+
+        <?php
+            if (file_exists(".git/refs/heads/main"))
+            {
+                $currentGitCommit = @file_get_contents(".git/refs/heads/main");
+                echo '<meta name="git-commit" content="' . $currentGitCommit . '">';
+            }
+        ?>
         
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="content-language" content="en">
