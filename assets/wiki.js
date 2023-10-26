@@ -26,6 +26,10 @@ $(document).ready(function(event)
                 
                 return;
             }
+            else if ($("body").hasClass("sidebar-open"))
+            {
+                $("#sidebar-close-button").click();
+            }
         }
     });
     
@@ -48,15 +52,19 @@ $(document).ready(function(event)
     
     $("#sidebar-toggle-button").click((event) =>
     {
-        $(".sidebar").toggleClass("open");
-        $(".wiki-content-container").toggleClass("open");
+        $("body").toggleClass("sidebar-open");
+    });
+    
+    $("#sidebar-close-button").click((event) =>
+    {
+        $("body").removeClass("sidebar-open");
     });
     
     $(".wiki-content").click((event) =>
     {
-        if ($(".sidebar").hasClass("open"))
+        if ($("body").hasClass("sidebar-open"))
         {
-            $("#sidebar-toggle-button").click();
+            $("#sidebar-close-button").click();
             
             event.preventDefault();
             event.stopPropagation();
@@ -109,6 +117,14 @@ $(document).ready(function(event)
             
             console.log("complete");
         });
+    });
+    
+    $(document).keyup(function(event)
+    {
+        if (event.code == "Slash")
+            // TODO: open the search bar if it's hidden
+            if (!$("#searchbar").is(":focus"))
+                $("#searchbar").focus();
     });
     
     $("#searchbar").on("keyup", function()

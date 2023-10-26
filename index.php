@@ -317,11 +317,17 @@
     <body>
         <div class='wiki-container'>
             <div class='sidebar' id='sidebar'>
-                <a href="https://kerrishaus.com/" class="navbar-brand">
-                    <center>
-                        <img src="https://kerrishaus.com/assets/logo/text-small.png" alt="Kerris Haus">
-                    </center>
-                </a>
+                <div class='navbar-brand'>
+                    <a href="https://kerrishaus.com/" class="navbar-brand">
+                        <center>
+                            <img src="https://kerrishaus.com/assets/logo/text-small.png" alt="Kerris Haus">
+                        </center>
+                    </a>
+                    
+                    <div id='sidebar-close-button'>
+                        <i class='fas fa-times' aria-label='Close sidebar'></i>
+                    </div>
+                </div>
                 <br/>
                 <div class='searchbar'>
                     <form class='form'>
@@ -347,7 +353,7 @@
             
             <main class='wiki-content-container'>
                 <header>
-                    <div class='sidebar-toggle-button' id='sidebar-toggle-button'>
+                    <div id='sidebar-toggle-button'>
                         <i class='fas fa-bars' aria-label='Toggle sidebar'></i>
                     </div>
                     <nav>

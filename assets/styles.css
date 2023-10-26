@@ -44,7 +44,7 @@ body
 {
     display: flex;
     
-    min-height: calc(100vh - 50px);
+    min-height: 100vh;
     
     max-width: 100vw;
     overflow-x: clip;
@@ -71,7 +71,12 @@ body
     overflow-x: hidden;
 }
 
-.wiki-container > .wiki-content-container > header > .sidebar-toggle-button
+.wiki-container > .sidebar > .navbar-brand > #sidebar-close-button
+{
+    display: none;
+}
+
+.wiki-container > .wiki-content-container > header > #sidebar-toggle-button
 {
     display: block;
     
@@ -79,11 +84,13 @@ body
     
     position: sticky;
     left: 0px;
+    
+    cursor: pointer;
 }
 
 @media only screen and (min-width: 1000px)
 {
-    .wiki-container > .wiki-content-container > header > .sidebar-toggle-button
+    .wiki-container > .wiki-content-container > header > #sidebar-toggle-button
     {
         display: none;
     }
@@ -94,36 +101,68 @@ body
 {
     .wiki-container > .sidebar
     {
-        margin-left: -350px;
+        position: fixed;
         
-        transition: margin-left 0.4s;
+        left: -100vw;
+        width: 100vw;
+        
+        transition: left 0.3s;
     }
     
     .wiki-container > .wiki-content-container
     {
-        margin-right: 0px;
+        position: absolute;
         
-        transition: margin-right 0.4s;
+        right: 0;
+        
+        transition: right 0.3s;
     }
     
-    .wiki-container > .sidebar.open
+    body.sidebar-open
     {
-        margin-left: 0px;
+        max-width: 100vw;
+        overflow: hidden;
     }
     
-    .wiki-container > .wiki-content-container.open
+    body.sidebar-open .wiki-container > .sidebar
     {
-        margin-right: -350px;
+        left: 0;
+        border-right: none;
+    }
+    
+    .wiki-container > .sidebar > .navbar-brand > #sidebar-close-button
+    {
+        display: block;
+        position: absolute;
+        top: 0;
+        right: 0;
+        padding: 20px;
+        cursor: pointer;
+    }
+    
+    body.sidebar-open .wiki-container > .wiki-content-container
+    {
+        right: -100vw;
+    }
+    
+    footer
+    {
+        position: relative;
+        z-index: 0;
+        right: 0;
+        
+        transition: right 0.3s;
+    }
+    
+    body.sidebar-open footer
+    {
+        right: -100vw;
     }
 }
 
 .sidebar::-webkit-scrollbar
 {
     display: none;
-}
-
-.wiki-container > .sidebar > .navbar-brand
-{
 }
 
 .wiki-container > .sidebar > .navbar-brand > img
