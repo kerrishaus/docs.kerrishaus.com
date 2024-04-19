@@ -21,26 +21,26 @@ td, tr, th
     background-color: #bbbbbb24;
 }
 
-th:first-child
+tr:first-child > td:first-child,
+tr:first-child > th:first-child
 {
     border-radius: 5px 0 0 0;
 }
 
-th:last-child
+tr:last-child > td:first-child,
+tr:last-child > th:first-child
 {
     border-radius: 0 5px 0 0;
 }
 
-tr:last-child td:first-child
+tr:last-child > td:first-child,
+tr:last-child > th:first-child
 {
     border-radius: 0 0 0 5px;
-    -moz-border-radius: 0 0 0 5px;
-    -webkit-border-radius: 0 0 0 5px;
 }
 
-tr:last-child td:last-child
+tr:last-child > td:last-child,
+tr:last-child > th:last-child
 {
     border-radius: 0 0 5px 0;
-    -moz-border-radius: 0 0 5px 0;
-    -webkit-border-radius: 0 0 5px 0;
 }
