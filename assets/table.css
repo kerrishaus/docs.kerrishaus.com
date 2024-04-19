@@ -24,23 +24,23 @@ td, tr, th
 tr:first-child > td:first-child,
 tr:first-child > th:first-child
 {
-    border-radius: 5px 0 0 0;
+    border-radius-top-left: 5px;
 }
 
 tr:first-child > td:last-child,
 tr:first-child > th:last-child
 {
-    border-radius: 0 5px 0 0;
+    border-radius-top-right: 5px;
 }
 
 tr:last-child > td:first-child,
 tr:last-child > th:first-child
 {
-    border-radius: 0 0 0 5px;
+    border-radius-bottom-left: 5px;
 }
 
 tr:last-child > td:last-child,
 tr:last-child > th:last-child
 {
-    border-radius: 0 0 5px 0;
+    border-radius-bottom-right: 5px;
 }
