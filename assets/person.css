@@ -32,11 +32,6 @@
     font-size: 16px;
 }
 
-.person-panel > .info-section
-{
-    background-color: blue;
-}
-
 .person-panel > .info-section > .section-header
 {
     background-color: #4a6894;
