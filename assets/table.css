@@ -2,8 +2,7 @@ table
 {
     border-radius: 10px;
     
-    -webkit-border-horizontal-spacing: 0px;
-    -webkit-border-vertical-spacing: 0px;
+    border-spacing: 2px;
     
     width: 100%;
 }
