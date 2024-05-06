@@ -457,3 +457,10 @@ a:hover
     transform: rotateY(180deg);
     font-size: 64px;
 }
+
+kbd {
+  background-color: #222;
+  border: 1px solid #646464;
+  padding: 2px 5px;
+  border-radius: 4px;
+}
