@@ -1,5 +1,4 @@
 <?php
-
     require_once("./_docs.config.php");
 
     if ($debug)
@@ -11,7 +10,7 @@
 
     foreach ($phpDependencies as $dependency)
         require_once($phpDependencyUrl . $dependency);
-        
+    
     ini_set("open_basedir", $contentBaseUri);
     
     if (!isset($parser))
@@ -20,6 +19,8 @@
             throw new RuntimeException("No Parser was found.");
         
         $parser = new $parserClassName();
+        
+        //Log::debug("Created parser from provided class name.");
     }
 
     // Tries to get the contents of the file and parse them using Parsedown.
