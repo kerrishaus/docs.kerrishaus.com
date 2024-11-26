@@ -153,8 +153,8 @@
                 //Log::debug("File + .md is not a directory, choosing.");
                 
                 // set directory to use the current file uri, then add .md to the file uri
-                $localDirectoryUri = $localFileUri;
                 $localFileUri = "{$localFileUri}.md";
+                $localDirectoryUri = pathinfo($localFileUri, PATHINFO_DIRNAME);
             }
             else
             {
@@ -242,7 +242,10 @@
                     if ($ignoreHiddenFiles and
                         str_starts_with($file, ".")
                     )
+                    {
+                        //Log::debug("Ignoring hidden file.");
                         continue;
+                    }
                     
                     $fileInfo = pathinfo("{$filepath}/{$file}");
                     
@@ -251,8 +254,12 @@
                     
                     if (is_dir("{$filepath}/{$file}"))
                     {
+                        //Log::debug("Found additional directory: {$filepath}/{$file}.");
+                        
                         if ($files_ = scanDirectory("{$filepath}/{$file}"))
                         {
+                            //Log::debug("Found additional " . count($files_) . " in {$filepath}/{$file}.");
+                            
                             // TODO: if filepath is empty, display it as a regular page
                             
                             $containers .= "<div><h1><a href='{$fhref}' class='nav-link'>{$fname}</a></h1><ul>";
@@ -266,7 +273,10 @@
                                 if ($ignoreHiddenFiles and
                                     str_starts_with($file_, ".")
                                 )
+                                {
+                                    //Log::debug("Ignoring hidden file.");
                                     continue;
+                                }
                                 
                                 $fileInfo_ = pathinfo("{$filepath}/{$file}/{$file_}");
                                     
@@ -283,6 +293,14 @@
                             $containers .= $links;
                             
                             $containers .= "</ul></div>";
+                        }
+                        else
+                        {
+                            // TODO: this is where directories that have no children (index.md is not included as a child) are placed.
+                            // it needs to look prettier.
+                            $containers .= "<div><h1><a href='{$fhref}' class='nav-link'>{$fname}</a></h1></div>";
+                            
+                            //Log::debug("Directory {$filepath}/{$file} contains no children.");
                         }
                     }
                     else
