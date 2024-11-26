@@ -73,9 +73,8 @@ If `$parser` is defined by a dependency before the script begins, the `->text(st
 - PHP 8.1
 
 # Dependencies
-
-These projects are required.
+This project expects to use ParsedownExtended as `$parser`, although any class which implements the `->text(string): string)` method.
 
 - https://github.com/erusev/parsedown
 - https://github.com/erusev/parsedown-extra
-- https://github.com/KEINOS/parsedown-extension_table-of-contents/blob/master/Extension.php
+- https://github.com/BenjaminHoegh/ParsedownExtended
