@@ -59,6 +59,7 @@ Here is the default config:
         "_parsedownExtended.php"
     ];
 
+    // if $parser is not defined anywhere else, this class name will be instantiated and used as the parser
     $parserClassName = "BenjaminHoegh\\ParsedownExtended\\ParsedownExtended";
 ?>
 ```
