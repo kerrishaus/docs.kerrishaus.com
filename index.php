@@ -13,8 +13,11 @@
         require_once($phpDependencyUrl . $dependency);
         
     ini_set("open_basedir", $contentBaseUri);
-        
-    $parser = new $parserClassName();
+    
+    if (!isset($parser) and !empty($parserClassName))
+        $parser = new $parserClassName();
+    else
+        throw new RuntimeException("No Parser was found.");
 
     // Tries to get the contents of the file and parse them using Parsedown.
     // Returns the parsed content as a giant string, or null if there was an error.   
@@ -44,7 +47,7 @@
         }
         catch (\Exception $e)
         {
-            exit("A fatal error was encountered. This error has not been logged. Please report this to <a href='mailto:webmaster@kerrishaus.com'>webmaster@kerrishaus.com</a>");
+            throw new Exception("Failed to fetch and parse requested file content: {$filePath}.");
         }
             
         return null;
