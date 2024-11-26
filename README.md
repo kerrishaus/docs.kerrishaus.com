@@ -65,7 +65,9 @@ Here is the default config:
 ?>
 ```
 
-The wiki reads pages and directories out of the `$contentBaseUri` variable set in the configuration.
+The wiki reads pages and directories out of the `$contentBaseUri` variable set in the configuration. This variable is used to set the php.ini `open_basedir` to prevent access to any files outside of the specified directory.
+
+If `$parser` is defined by a dependency before the script begins, the `->text(string)` method will be called with the contents of each page. If `$parser` is not defined, the script will attempt to instantiate the class defined by `$parserClassName`.
 
 ## Server Requirements
 - PHP 8.1
