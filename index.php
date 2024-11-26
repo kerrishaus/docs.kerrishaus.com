@@ -14,10 +14,13 @@
         
     ini_set("open_basedir", $contentBaseUri);
     
-    if (!isset($parser) and !empty($parserClassName))
+    if (!isset($parser))
+    {
+        if (empty($parserClassName))
+            throw new RuntimeException("No Parser was found.");
+        
         $parser = new $parserClassName();
-    else
-        throw new RuntimeException("No Parser was found.");
+    }
 
     // Tries to get the contents of the file and parse them using Parsedown.
     // Returns the parsed content as a giant string, or null if there was an error.   
