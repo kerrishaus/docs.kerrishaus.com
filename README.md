@@ -25,13 +25,14 @@ Here is the default config:
     // this is the location the wiki will look for content.
     // this must be a subdirectory of the directory the wiki being run in.
     // no leading or trailing slash, just the directory name
+    // open_basedir is set to this directory to prevent out of scope file exposure
     $contentBaseUri = "wiki-content";
 
     // this ignores files prefixed with .
     $ignoreHiddenFiles = true;
 
     // files ignored by the sidebar
-    // these can still be viewed with a direct url I think
+    // these can still be viewed with a direct url
     $ignoredFiles = [
         ".",
         "..",
