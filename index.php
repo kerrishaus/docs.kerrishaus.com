@@ -51,12 +51,13 @@
     }
 
     // Scans one single level in $directory
-    // TODO: filter out ignoredFiles here instead of later
     function scanDirectory($directory = ".")
     {
+        global $ignoredFiles;
+        
         if (file_exists($directory))
         {
-            $filesInDirectory = scandir($directory);
+            $filesInDirectory = array_diff(scandir($directory), $ignoredFiles);
             return $filesInDirectory;
         }
         else
@@ -65,14 +66,15 @@
     
     // https://stackoverflow.com/questions/34190464/php-scandir-recursively mateoruda
     // Scans all the way into each subdirectory of $dir and so on.
-    // TODO: filter out ignoredFiles here instead of later
     function scanDirectoryRecursive($dir) 
     {
+        global $ignoredFiles;
+        
         if (!file_exists($dir))
             return false;
         
         $result = [];
-        foreach (scandir($dir) as $filename) 
+        foreach (array_diff(scandir($dir), $ignoredFiles) as $filename) 
         {
             if ($filename[0] === ".")
                 continue;
@@ -209,7 +211,6 @@
         {
             global $baseUri;
             global $contentBaseUri;
-            global $ignoredFiles;
             global $ignoreHiddenFiles;
             
             //Log::debug("Scanning {$filepath} for files and directories (this, plus 1 layer).");
@@ -237,9 +238,6 @@
                 
                 foreach ($files as $file)
                 {
-                    if (in_array($file, $ignoredFiles))
-                        continue;
-                    
                     // TODO: I don't think is is necessary because . is usually in the $ignoredFiles list.
                     if ($ignoreHiddenFiles and
                         str_starts_with($file, ".")
@@ -259,11 +257,12 @@
                             
                             $containers .= "<div><h1><a href='{$fhref}' class='nav-link'>{$fname}</a></h1><ul>";
                             
+                            // cheap and easy "sorting" by type, directories on top, links below
+                            $directories = "";
+                            $links = "";
+                            
                             foreach ($files_ as $file_)
                             {
-                                if (in_array($file_, $ignoredFiles))
-                                    continue;
-                                
                                 if ($ignoreHiddenFiles and
                                     str_starts_with($file_, ".")
                                 )
@@ -275,10 +274,13 @@
                                 $fhref_ = "{$webUriBase}/{$file}/{$fileInfo_["filename"]}";
                                 
                                 if (is_dir("{$filepath}/{$file}/{$file_}"))
-                                $containers .= "<li><a href='{$fhref_}' class='nav-link'><i class='fas fa-folder-open'></i> {$fname_}</a></li>";
+                                    $folderShit .= "<li><a href='{$fhref_}' class='nav-link'><i class='fas fa-folder-open'></i> {$fname_}</a></li>";
                                 else
-                                    $containers .= "<li><a href='{$fhref_}' class='nav-link'>{$fname_}</a></li>";
+                                    $linkShit .= "<li><a href='{$fhref_}' class='nav-link'>{$fname_}</a></li>";
                             }
+                            
+                            $containers .= $directories;
+                            $containers .= $links;
                             
                             $containers .= "</ul></div>";
                         }
