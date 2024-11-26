@@ -11,31 +11,36 @@
 
     foreach ($phpDependencies as $dependency)
         require_once($phpDependencyUrl . $dependency);
+        
+    $parser = new $parserClassName();
 
     // Tries to get the contents of the file and parse them using Parsedown.
     // Returns the parsed content as a giant string, or null if there was an error.   
-    function getFileContents(string $file): ?string
+    function getFileContents(string $filePath): ?string
     {
+        global $parser;
+        
         try
         {
-            $file = file_get_contents($file);
-
-            $pw = new ParsedownToC();
-            $pw->setTagToC("[__TOC__]");
-            $file = $pw->text($file);
+            $rawFile = file_get_contents($filePath);
             
-            $file = preg_replace("<@(post|get|delete|put)=((\/[a-zA-Z0-9_]*)+)>i", "<div class='bar-group'>
+            if (empty($rawFile))
+                return "";
+            
+            $parsedFile = $parser->text($rawFile);
+            
+            $parsedFile = preg_replace("<@(post|get|delete|put)=((\/[a-zA-Z0-9_]*)+)>i", "<div class='bar-group'>
                                         <div class='bar-group-addon'>
                                             <strong>$1</strong>
                                         </div>
                                         <div>
                                             $2
                                         </div>
-                                    </div>", $file);
-
-            return $file;
+                                    </div>", $parsedFile);
+            
+            return $parsedFile;
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             exit("A fatal error was encountered. This error has not been logged. Please report this to <a href='mailto:webmaster@kerrishaus.com'>webmaster@kerrishaus.com</a>");
         }
@@ -44,6 +49,7 @@
     }
 
     // Scans one single level in $directory
+    // TODO: filter out ignoredFiles here instead of later
     function scanDirectory($directory = ".")
     {
         if (file_exists($directory))
@@ -57,13 +63,14 @@
     
     // https://stackoverflow.com/questions/34190464/php-scandir-recursively mateoruda
     // Scans all the way into each subdirectory of $dir and so on.
+    // TODO: filter out ignoredFiles here instead of later
     function scanDirectoryRecursive($dir) 
     {
         if (!file_exists($dir))
             return false;
         
         $result = [];
-        foreach(scandir($dir) as $filename) 
+        foreach (scandir($dir) as $filename) 
         {
             if ($filename[0] === '.') continue;
             
@@ -71,15 +78,12 @@
             if (is_dir($filePath)) 
             {
                 $result[] = $filePath;
+                
                 foreach (scanDirectoryRecursive($filePath) as $childFilename) 
-                {
                     $result[] = $filename . '/' . $childFilename;
-                }
             } 
             else 
-            {
                 $result[] = $filename;
-            }
         }
         return $result;
     }
@@ -194,16 +198,18 @@
                         str_starts_with($file, '.')
                     )
                         continue;
-                        
+                    
                     $fileInfo = pathinfo("{$directory}/{$file}");
-                        
-                    $fname = htmlspecialchars(ucwords(str_replace("_", " ", $fileInfo['filename'])));
+                    
+                    $fname = htmlentities(ucwords(str_replace("_", " ", $fileInfo['filename'])));
                     $fhref = "{$webUriBase}/{$fileInfo['filename']}";
-                        
+                    
                     if (is_dir("{$directory}/{$file}"))
                     {
                         if ($files_ = scanDirectory("{$directory}/{$file}"))
                         {
+                            // TODO: if directory is empty, display it as a regular page
+                            
                             $containers .= "<div><h1><a href='{$fhref}' class='nav-link'>{$fname}</a></h1><ul>";
                             
                             foreach ($files_ as $file_)
@@ -218,7 +224,7 @@
                                 
                                 $fileInfo_ = pathinfo("{$directory}/{$file}/{$file_}");
                                     
-                                $fname_ = htmlspecialchars(ucwords(str_replace("_", " ", $fileInfo_['filename'])));
+                                $fname_ = htmlentities(ucwords(str_replace("_", " ", $fileInfo_['filename'])));
                                 $fhref_ = "{$webUriBase}/{$file}/{$fileInfo_['filename']}";
                                 
                                 if (is_dir("{$directory}/{$file}/{$file_}"))
@@ -307,7 +313,7 @@
         
         <?php if (!empty($currentPageTitle)): ?>
             <title>
-                <?= htmlspecialchars($currentPageTitle) ?> - Kerris Haus Docs
+                <?= htmlentities($currentPageTitle) ?> - Kerris Haus Docs
             </title>
         <?php else: ?>
             <title>Kerris Haus Docs</title>
