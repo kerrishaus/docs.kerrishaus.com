@@ -4,13 +4,15 @@
 
     if ($debug)
     {
-        ini_set('display_errors', 1);
-        ini_set('display_startup_errors', 1);
+        ini_set("display_errors", 1);
+        ini_set("display_startup_errors", 1);
         error_reporting(E_ALL);
     }
 
     foreach ($phpDependencies as $dependency)
         require_once($phpDependencyUrl . $dependency);
+        
+    ini_set("open_basedir", $contentBaseUri);
         
     $parser = new $parserClassName();
 
@@ -72,122 +74,167 @@
         $result = [];
         foreach (scandir($dir) as $filename) 
         {
-            if ($filename[0] === '.') continue;
+            if ($filename[0] === ".")
+                continue;
             
-            $filePath = $dir . '/' . $filename;
+            $filePath = $dir . "/" . $filename;
             if (is_dir($filePath)) 
             {
                 $result[] = $filePath;
                 
                 foreach (scanDirectoryRecursive($filePath) as $childFilename) 
-                    $result[] = $filename . '/' . $childFilename;
+                    $result[] = $filename . "/" . $childFilename;
             } 
             else 
                 $result[] = $filename;
         }
+        
         return $result;
     }
-
-    if (isset($_GET['page']))
+    
+    // htaccess rules sends page variable
+    // this should ALWAYS be set, so maybe check later and don't have all this in a big block. guard clause style.
+    if (isset($_GET["page"]))
     {
-        $requestUri = $_GET['page'];
+        $requestUri = $_GET["page"];
         
-        $fileUri = "";
+        //Log::debug("------ Requested page: " . ($requestUri ?: "it's empty"));
         
-        if (empty($_GET['page']))
+        // webserver/public_html/wiki-content/api/calendar/event
+        // will be replaced with the real local file uri when it is found
+        $localFileUri      = rtrim("$contentBaseUri/$requestUri", "/"); // remove / from end of uri
+        
+        //Log::debug("First localFileUri: {$localFileUri}");
+        
+        // if the exact file exists, it should probably be a directory
+        // we don't want people using .md in the url, so if a filename
+        // is requested with it, we treat it as invalid.
+        if (file_exists($localFileUri))
         {
-            $realFile = "{$contentBaseUri}/index.md";
+            //Log::debug("Exact file exists.");
+            
+            // if the file is a directory, check for an index
+            if (is_dir($localFileUri))
+            {
+                //Log::debug("Exact file is a directory.");
+                
+                if (file_exists("{$localFileUri}/index.md"))
+                {
+                    $localFileUri = "{$localFileUri}/index.md";
+                    $localDirectoryUri = pathinfo($localFileUri, PATHINFO_DIRNAME);
+                    
+                    //Log::debug("Exact file (which is a directory) contains index.md, choosing.");
+                }
+                else // localFileUri exists but is a directory and does not contain an index
+                {
+                    $localDirectoryUri = $localFileUri;
+                    $localFileUri = null;
+                    
+                    //Log::debug("Exact file (which is a directory) does not contain an index, and therefore does not exist.");
+                }
+            }
+            else
+            {
+                //Log::debug("Requested file {$localFileUri} exists and is NOT a directory. Ignoring request for file + .md");
+                
+                $localDirectoryUri = $requestUri;
+                $localFileUri = null;
+            }
         }
+        else if (file_exists("{$localFileUri}.md"))
+        {
+            //Log::debug("File + .md exists, it is a regular article.");
+            
+            // just extra sanity checking to make sure the .md is not a directory, you never know
+            if (!is_dir("{$localFileUri}.md"))
+            {
+                //Log::debug("File + .md is not a directory, choosing.");
+                
+                // set directory to use the current file uri, then add .md to the file uri
+                $localDirectoryUri = $localFileUri;
+                $localFileUri = "{$localFileUri}.md";
+            }
+            else
+            {
+                //Log::error("Requested file {$localFileUri}.md exists and IS a directory. This is not allowed.");
+                
+                $localDirectoryUri = $requestUri;
+                $localFileUri = null;
+            }
+        }
+        // exact file and file.md don't exist
         else
         {
-            $fileUri = "$contentBaseUri/$requestUri";
+            //Log::debug("Neither exact file nor file + .md existed.");
             
-            // file exists as requested
-            // if this is true it, should only be for directories
-            if (file_exists($fileUri))
-            {
-                if (is_dir($fileUri))
-                {
-                    if (file_exists("{$fileUri}/index.md"))
-                        $realFile = "{$fileUri}/index.md";
-                    else
-                        $realFile = null;
-                }
-                else
-                    exit("file exists as requested, this should never happen.<br/>");
-            }
-            // file exists with markdown extension
-            // if this is true, the file should not be a directory
-            else if (file_exists("{$fileUri}.md"))
-            {
-                if (!is_dir("{$fileUri}.md"))
-                    $realFile = "{$fileUri}.md";
-                else
-                    exit("file exists as requested with md extension exists, but is a directory, this should never happen.<br/>");
-            }
-            // file didn't exist at all
-            else
-                $realFile = null;
+            $localDirectoryUri = $requestUri;
+            $localFileUri = null;
         }
         
-        $directories = explode("/", $requestUri);
-
+        $localDirectoryUri = rtrim($localDirectoryUri, "/");
+        
+        //Log::debug("Chosen localFileUri: {$localFileUri}");
+        //Log::debug("Chosen localDirectoryUri: {$localDirectoryUri}");
+        
+        // API/Object/Hook -> API, Object, Hook
+        $directoryTree = explode("/", $requestUri);
+        
         $currentPageHref = $baseUri;
         $currentPageTitle = "Home";
         
         $previousPageHref = "";
         $previousPageTitle = "";
         
-        $navbar = "<li>
-                    <a href='{$baseUri}' class='nav-link fas fa-home' aria-label='Home'></a>
-                   </li>" . PHP_EOL;
+        $navbarLinks = "<li><a href='{$baseUri}' class='nav-link fas fa-home' aria-label='Home'><span class='sr-only'>Home</span></a></li>" . PHP_EOL;
         
-        for ($i = 0; $i < count($directories); $i++)
+        // adds an LI for each navbar page
+        for ($i = 0; $i < count($directoryTree); $i++)
         {
-            if (empty($directories[$i]))
+            if (empty($directoryTree[$i]))
                 continue;
             
             $previousPageHref = $currentPageHref;
             $previousPageTitle = $currentPageTitle;
             
-            $currentPageHref .= "/{$directories[$i]}";
-            $currentPageTitle = htmlspecialchars(ucwords(str_replace("_", " ", $directories[$i])));
+            $currentPageHref .= "/{$directoryTree[$i]}";
+            $currentPageTitle = htmlspecialchars(ucwords(str_replace("_", " ", $directoryTree[$i])));
             
-            $navbar .= "<li>
-                        <a class='nav-link' href='{$currentPageHref}'>{$currentPageTitle}</a>
-                        </li>" . PHP_EOL;
+            $navbarLinks .= "<li><a class='nav-link' href='{$currentPageHref}'>{$currentPageTitle}</a></li>" . PHP_EOL;
         }
         
-        // This function is used to find the links for all pages in the
-        // current directory, as well as one level down in subdirectories.
-        function linksForDirectory(string $directory): string
+        // creates the sidebar
+        // names of all files in this filepath
+        // names of all directories, plus the files & directories in THOSE directories, that are in this filepath
+        function buildSidebarLinks(string $filepath): string
         {
             global $baseUri;
             global $contentBaseUri;
             global $ignoredFiles;
             global $ignoreHiddenFiles;
             
+            //Log::debug("Scanning {$filepath} for files and directories (this, plus 1 layer).");
+            
             $containers = "";
             $pageLinks = "";
             
-            if (empty($directory))
-                $directory = $contentBaseUri;
-            if (!file_exists($directory))
-                if (file_exists("{$directory}.md"))
-                    $directory = substr($directory, 0, strrpos($directory, "/"));
+            // webUriBase is required for links to the items, not to access the item.
+            $webUriBase = $baseUri;
             
-            if (str_starts_with($directory, "wiki-content/"))
-                $webUriBase = str_replace("wiki-content/", "", $directory);
-            else if (str_starts_with($directory, "wiki-content"))
-                $webUriBase = str_replace("wiki-content", "", $directory);
-                
-            if (empty($webUriBase))
-                $webUriBase = $baseUri;
-            else
-                $webUriBase = "{$baseUri}/{$webUriBase}";
-                
-            if ($files = scanDirectory($directory))
+            // by removing any portion from before the content directory
+            // we can create a web url using the filepath from inside the content
+            // directory. so it will work regardless of where the content is
+            // e.g. it can be outside of public_html.
+            if (str_starts_with($filepath, $contentBaseUri))
+                $webUriBase .= str_replace($contentBaseUri, "", $filepath);
+            else if (str_starts_with($filepath, $contentBaseUri))
+                $webUriBase .= str_replace($contentBaseUri, "", $filepath);
+            
+            //Log::debug("webUriBase: {$webUriBase}");
+            
+            if ($files = scanDirectory($filepath))
             {
+                //Log::debug("Found " . count($files) . " items.");
+                
                 foreach ($files as $file)
                 {
                     if (in_array($file, $ignoredFiles))
@@ -195,20 +242,20 @@
                     
                     // TODO: I don't think is is necessary because . is usually in the $ignoredFiles list.
                     if ($ignoreHiddenFiles and
-                        str_starts_with($file, '.')
+                        str_starts_with($file, ".")
                     )
                         continue;
                     
-                    $fileInfo = pathinfo("{$directory}/{$file}");
+                    $fileInfo = pathinfo("{$filepath}/{$file}");
                     
-                    $fname = htmlentities(ucwords(str_replace("_", " ", $fileInfo['filename'])));
-                    $fhref = "{$webUriBase}/{$fileInfo['filename']}";
+                    $fname = htmlentities(ucwords(str_replace("_", " ", $fileInfo["filename"])));
+                    $fhref = "{$webUriBase}/{$fileInfo["filename"]}";
                     
-                    if (is_dir("{$directory}/{$file}"))
+                    if (is_dir("{$filepath}/{$file}"))
                     {
-                        if ($files_ = scanDirectory("{$directory}/{$file}"))
+                        if ($files_ = scanDirectory("{$filepath}/{$file}"))
                         {
-                            // TODO: if directory is empty, display it as a regular page
+                            // TODO: if filepath is empty, display it as a regular page
                             
                             $containers .= "<div><h1><a href='{$fhref}' class='nav-link'>{$fname}</a></h1><ul>";
                             
@@ -218,16 +265,16 @@
                                     continue;
                                 
                                 if ($ignoreHiddenFiles and
-                                    str_starts_with($file_, '.')
+                                    str_starts_with($file_, ".")
                                 )
                                     continue;
                                 
-                                $fileInfo_ = pathinfo("{$directory}/{$file}/{$file_}");
+                                $fileInfo_ = pathinfo("{$filepath}/{$file}/{$file_}");
                                     
-                                $fname_ = htmlentities(ucwords(str_replace("_", " ", $fileInfo_['filename'])));
-                                $fhref_ = "{$webUriBase}/{$file}/{$fileInfo_['filename']}";
+                                $fname_ = htmlentities(ucwords(str_replace("_", " ", $fileInfo_["filename"])));
+                                $fhref_ = "{$webUriBase}/{$file}/{$fileInfo_["filename"]}";
                                 
-                                if (is_dir("{$directory}/{$file}/{$file_}"))
+                                if (is_dir("{$filepath}/{$file}/{$file_}"))
                                 $containers .= "<li><a href='{$fhref_}' class='nav-link'><i class='fas fa-folder-open'></i> {$fname_}</a></li>";
                                 else
                                     $containers .= "<li><a href='{$fhref_}' class='nav-link'>{$fname_}</a></li>";
@@ -243,23 +290,27 @@
             
             if (!empty($pageLinks))
                 $containers .= "<div class='lonely-links'><h1><i>Current Page</i></h1><ul class='lonely-links'>{$pageLinks}</ul></div>";
+            /* this didn't make it in because there's no text-muted class for docs.
+            else
+                $containers .= "<span class='text-muted'>It's so lonely here...</span>";
+            */
             
             return $containers;
         }
         
-        $links = linksForDirectory($fileUri);
+        $links = buildSidebarLinks($localDirectoryUri);
         
-        if ($realFile !== null)
-            $file = getFileContents($realFile);
-        else
+        if (is_null($localFileUri))
             $file = "<div class='file-empty'><i class='fas fa-clock-rotate-left'></i><p>Future home of something cool.<p><small>This document hasn't been written yet.</small></div>";
+        else
+            $file = getFileContents($localFileUri);
         
-        if (isset($_GET['ajax']))
+        if (isset($_GET["ajax"]))
         {
             exit(json_encode([ "status" => 200,
                                "title" => !empty($currentPageTitle) ? "{$currentPageTitle} • Kerris Haus Docs" : "Kerris Haus Docs",
                                "currentPageHref" => $currentPageHref,
-                               "navbar" => $navbar,
+                               "navbar" => $navbarLinks,
                                "webPreviousDirectory" => $previousPageHref,
                                "webPreviousDirectoryName" => $previousPageTitle,
                                "links" => $links,
@@ -274,14 +325,6 @@
     <head>
         <meta name="author" content="Kerris Haus">
 
-        <?php
-            if (file_exists(".git/refs/heads/main"))
-            {
-                $currentGitCommit = @file_get_contents(".git/refs/heads/main");
-                echo '<meta name="git-commit" content="' . $currentGitCommit . '">';
-            }
-        ?>
-        
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="content-language" content="en">
         <meta name="theme-color" content="#14161D">
@@ -321,55 +364,55 @@
     </head>
     
     <body>
-        <div class='wiki-container'>
-            <div class='sidebar' id='sidebar'>
-                <div class='navbar-brand'>
+        <div class="wiki-container">
+            <div class="sidebar" id="sidebar">
+                <div class="navbar-brand">
                     <a href="https://kerrishaus.com/" class="navbar-brand">
                         <center>
                             <img src="https://kerrishaus.com/assets/logo/text-small.png" alt="Kerris Haus">
                         </center>
                     </a>
                     
-                    <div id='sidebar-close-button'>
-                        <i class='fas fa-times' aria-label='Close sidebar'></i>
+                    <div id="sidebar-close-button">
+                        <i class="fas fa-times" aria-label="Close sidebar"></i>
                     </div>
                 </div>
                 <br/>
-                <div class='searchbar'>
-                    <form class='form'>
-                        <input class='form-control' type='text' placeholder="press / to quick search" id="searchbar" autocomplete="off" />
+                <div class="searchbar">
+                    <form class="form">
+                        <input class="form-control" type="text" placeholder="press / to quick search" id="searchbar" autocomplete="off" />
                     </form>
                 </div>
                 <?php if (!empty($previousPageHref)): ?>
-                    <a href='<?= $previousPageHref; ?>' id='webPreviousDirectory' class='nav-link'><i class='fas fa-arrow-left' aria-hidden='true'></i> <?= $previousPageTitle; ?></a>
+                    <a href="<?= $previousPageHref; ?>" id="webPreviousDirectory" class="nav-link"><i class="fas fa-arrow-left" aria-hidden="true"></i> <?= $previousPageTitle; ?></a>
                 <?php endif; ?>
-                <div class='links'>
+                <div class="links">
                     <!--
                     <div>
                         <h1>API</h1>
                         <ul>
-                            <li><a href='https://docs.kerrishaus.com/API/portal' class='nav-link'>Portal</a></li>
-                            <li><a href='https://docs.kerrishaus.com/API/games' class='nav-link'>Games</a></li>
+                            <li><a href="https://docs.kerrishaus.com/API/portal" class="nav-link">Portal</a></li>
+                            <li><a href="https://docs.kerrishaus.com/API/games" class="nav-link">Games</a></li>
                         </ul>
                     </div>
                     -->
-                    <?= $links; ?>
+                    <?= $links ?>
                 </div>
             </div>
             
-            <main class='wiki-content-container'>
+            <main class="wiki-content-container">
                 <header>
-                    <div id='sidebar-toggle-button'>
-                        <i class='fas fa-bars' aria-label='Toggle sidebar'></i>
+                    <div id="sidebar-toggle-button">
+                        <i class="fas fa-bars" aria-label="Toggle sidebar"></i>
                     </div>
                     <nav>
-                        <ul id='navbar'>
-                            <?= $navbar; ?>
+                        <ul id="navbar">
+                            <?= $navbarLinks ?>
                         </ul>
                     </nav>
                 </header>
                 
-                <div class='wiki-content'>
+                <div class="wiki-content">
                     <?= $file ?>
                 </div>
             </main>
