@@ -15,7 +15,6 @@ Next, configure the `_docs.config.php` file to fit your needs.
 Here is the default config:
 ```
 <?php
-
     // this option will enable printing debug information out to the webpage
     // do not set this to true in production, as it could cause sensitive
     // information such as session keys and file locations to be leaked!
@@ -57,9 +56,10 @@ Here is the default config:
     $phpDependencies = [
         "_parsedown.php",
         "_parsedownExtra.php",
-        "_parsedownToc.php"
+        "_parsedownExtended.php"
     ];
 
+    $parserClassName = "BenjaminHoegh\\ParsedownExtended\\ParsedownExtended";
 ?>
 ```
 
