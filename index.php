@@ -274,9 +274,9 @@
                                 $fhref_ = "{$webUriBase}/{$file}/{$fileInfo_["filename"]}";
                                 
                                 if (is_dir("{$filepath}/{$file}/{$file_}"))
-                                    $folderShit .= "<li><a href='{$fhref_}' class='nav-link'><i class='fas fa-folder-open'></i> {$fname_}</a></li>";
+                                    $directories .= "<li><a href='{$fhref_}' class='nav-link'><i class='fas fa-folder-open'></i> {$fname_}</a></li>";
                                 else
-                                    $linkShit .= "<li><a href='{$fhref_}' class='nav-link'>{$fname_}</a></li>";
+                                    $links .= "<li><a href='{$fhref_}' class='nav-link'>{$fname_}</a></li>";
                             }
                             
                             $containers .= $directories;
