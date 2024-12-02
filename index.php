@@ -64,8 +64,7 @@
         
         if (file_exists($directory))
         {
-            $filesInDirectory = array_diff(scandir($directory), $ignoredFiles);
-            return $filesInDirectory;
+            return sort(array_diff(scandir($directory), $ignoredFiles));
         }
         else
             return false;
@@ -98,7 +97,7 @@
                 $result[] = $filename;
         }
         
-        return $result;
+        return sort($result);
     }
     
     // htaccess rules sends page variable
