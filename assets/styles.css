@@ -558,12 +558,12 @@ a:hover
 
 .wiki-content .markdown-alert.markdown-alert-caution
 {
-    border-color: red;
+    border-color: #d9534f;
 }
 
 .wiki-content .markdown-alert.markdown-alert-caution .markdown-alert-title
 {
-    color: red;
+    color: #d9534f;
 }
 
 .wiki-content .markdown-alert.markdown-alert-caution .markdown-alert-title::before
