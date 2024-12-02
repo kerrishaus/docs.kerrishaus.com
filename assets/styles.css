@@ -473,6 +473,7 @@ a:hover
 .wiki-content .markdown-alert
 {
     border-left: 5px solid dodgerblue;
+    border-radius: 5px;
     padding-left: 10px;
 }
 
