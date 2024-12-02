@@ -58,21 +58,19 @@
     }
 
     // Scans one single level in $directory
-    function scanDirectory($directory = ".")
+    function scanDirectory(string $directory = "."): array|false
     {
         global $ignoredFiles;
         
         if (file_exists($directory))
-        {
-            return sort(array_diff(scandir($directory), $ignoredFiles));
-        }
+            return array_diff(scandir($directory), $ignoredFiles);
         else
             return false;
     }
     
     // https://stackoverflow.com/questions/34190464/php-scandir-recursively mateoruda
     // Scans all the way into each subdirectory of $dir and so on.
-    function scanDirectoryRecursive($dir) 
+    function scanDirectoryRecursive(string $dir): array|false
     {
         global $ignoredFiles;
         
@@ -97,7 +95,7 @@
                 $result[] = $filename;
         }
         
-        return sort($result);
+        return $result;
     }
     
     // htaccess rules sends page variable
