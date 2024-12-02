@@ -370,7 +370,7 @@
             <link rel="stylesheet" type="text/css" href="https://docs.kerrishaus.com/assets/noscript.css" />
         </noscript>
         
-        <script src="https://kerrishaus.com/assets/scripts/jquery-3.6.0.min.js"></script>
+        <script src="https://kerrishaus.com/assets/scripts/jquery-3.7.0.min.js"></script>
         <script src="https://docs.kerrishaus.com/assets/wiki.js"></script>
 
         <?php foreach ($cssIncludes as $cssInclude): ?>
