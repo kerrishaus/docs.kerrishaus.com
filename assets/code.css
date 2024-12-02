@@ -1,7 +1,12 @@
 code
 {  
-  color: #1da5d9;
-  background-color: #363636;
-  padding: 2px 4px;
-  border-radius: 4px;
+    color: #1da5d9;
+    background-color: #363636;
+    padding: 2px 4px;
+    border-radius: 4px;
+}
+
+pre code
+{
+    background-color: unset;
 }
