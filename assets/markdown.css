@@ -8,5 +8,9 @@ pre
 .wiki-content > h1:first-child
 {
     margin-top: 0;
+}    
+
+.markdown-alert + .markdown-alert
+{
+    margin-top: 20px;
 }
-    
