@@ -111,7 +111,7 @@ body
     
     .wiki-container > .wiki-content-container
     {
-        position: absolute;
+        position: relative;
         
         right: 0;
         
