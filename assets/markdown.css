@@ -4,3 +4,9 @@ pre
     border-radius: 5px;
     padding: 10px;
 }
+
+.wiki-content > h1:first-child
+{
+    margin-top: 0;
+}
+    
