@@ -175,7 +175,7 @@ body
     display: block;
 }
 
-.wiki-container > .sidebar > .links > div > h1
+.wiki-container > .sidebar > .links > div > ul
 {
     list-style-type: none;
     margin-block-start: 0px;
@@ -183,7 +183,10 @@ body
     margin-inline-start: 0px;
     margin-inline-end: 0px;
     padding-inline-start: 0px;
-    
+}
+
+.wiki-container > .sidebar > .links > div > h1
+{
     font-size: 16px;
     font-weight: 500;
     
