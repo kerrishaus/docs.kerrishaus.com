@@ -70,7 +70,7 @@ The wiki reads pages and directories out of the `$contentBaseUri` variable set i
 If `$parser` is defined by a dependency before the script begins, the `->text(string)` method will be called with the contents of each page. If `$parser` is not defined, the script will attempt to instantiate the class defined by `$parserClassName`.
 
 ## Server Requirements
-- PHP 8.1
+- PHP 8.4
 
 # Dependencies
 This project expects to use ParsedownExtended as `$parser`, although any class which implements the `->text(string): string)` method.
