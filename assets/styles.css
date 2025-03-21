@@ -34,28 +34,28 @@ body
 {
     display: flex;
     
-    min-height: 100dvh;
-    
     max-width: 100vw;
-    overflow-x: clip;
+    min-height: 100dvh;
+    max-height: 100vh;
+    
+    overflow: hidden;
 }
 
 .wiki-container > .sidebar
 {
     position: sticky;
     z-index: 2;
-    top: 0px;
+    top: 0;
+
+    width: 350px;
+    max-width: 100vw;
+    max-height: 100dvh;
     
     background-color: transparent;
     
     padding: 20px;
     
     border-right: 1px solid #686868;
-
-    width: 350px;
-    max-width: 100vw;
-    
-    max-height: 100dvh;
     
     overflow-y: auto;
     overflow-x: hidden;
@@ -135,15 +135,6 @@ body
         right: -100vw;
     }
     
-    footer
-    {
-        position: relative;
-        z-index: 0;
-        right: 0;
-        
-        transition: right 0.3s;
-    }
-    
     body.sidebar-open footer
     {
         right: -100vw;
@@ -168,7 +159,7 @@ body
     margin-bottom: 20px;
 }
 
-#webPreviousDirectory
+.wiki-container > .sidebar > #webPreviousDirectory
 {
     margin-bottom: 20px;
     
@@ -178,11 +169,8 @@ body
 .wiki-container > .sidebar > .links > div > ul
 {
     list-style-type: none;
-    margin-block-start: 0px;
-    margin-block-end: 0px;
-    margin-inline-start: 0px;
-    margin-inline-end: 0px;
-    padding-inline-start: 0px;
+    margin: 0;
+    padding: 0;
 }
 
 .wiki-container > .sidebar > .links > div > h1
@@ -364,6 +352,7 @@ a:hover
 {
     background-color: #00000099;
     width: 100%;
+    overflow-y: scroll;
 }
 
 .wiki-container > .wiki-content-container > header
