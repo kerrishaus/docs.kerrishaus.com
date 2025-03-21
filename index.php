@@ -439,9 +439,9 @@
                 <div class="wiki-content">
                     <?= $file ?>
                 </div>
+                
+                <?= file_get_contents("https://kerrishaus.com/inc/templates/_footer.php"); ?>
             </main>
         </div>
-        
-        <?= file_get_contents("https://kerrishaus.com/inc/templates/_footer.php"); ?>
     </body>
 </html>
