@@ -41,7 +41,7 @@ body
     overflow: hidden;
 }
 
-.wiki-container > .sidebar
+.wiki-container > #sidebar
 {
     position: sticky;
     z-index: 2;
@@ -61,7 +61,7 @@ body
     overflow-x: hidden;
 }
 
-.wiki-container > .sidebar > .navbar-brand > #sidebar-close-button
+.wiki-container > #sidebar > .navbar-brand > #sidebar-close-button
 {
     display: none;
 }
@@ -89,7 +89,7 @@ body
 /* less than 1000px */
 @media only screen and (max-width: 1000px)
 {
-    .wiki-container > .sidebar
+    .wiki-container > #sidebar
     {
         position: fixed;
         
@@ -114,13 +114,13 @@ body
         overflow: hidden;
     }
     
-    body.sidebar-open .wiki-container > .sidebar
+    body.sidebar-open .wiki-container > #sidebar
     {
         left: 0;
         border-right: none;
     }
     
-    .wiki-container > .sidebar > .navbar-brand > #sidebar-close-button
+    .wiki-container > #sidebar > .navbar-brand > #sidebar-close-button
     {
         display: block;
         position: absolute;
@@ -141,17 +141,17 @@ body
     }
 }
 
-.sidebar::-webkit-scrollbar
+#sidebar::-webkit-scrollbar
 {
     display: none;
 }
 
-.wiki-container > .sidebar > .navbar-brand > img
+.wiki-container > #sidebar > .navbar-brand > img
 {
     margin-bottom: 15px;
 }
 
-.wiki-container > .sidebar > .searchbar
+.wiki-container > #sidebar > .searchbar
 {
     position: sticky;
     top: 0px;
@@ -159,21 +159,21 @@ body
     margin-bottom: 20px;
 }
 
-.wiki-container > .sidebar > #webPreviousDirectory
+.wiki-container > #sidebar > #webPreviousDirectory
 {
     margin-bottom: 20px;
     
     display: block;
 }
 
-.wiki-container > .sidebar > .links > div > ul
+.wiki-container > #sidebar > .links > div > ul
 {
     list-style-type: none;
     margin: 0;
     padding: 0;
 }
 
-.wiki-container > .sidebar > .links > div > h1
+.wiki-container > #sidebar > .links > div > h1
 {
     font-size: 16px;
     font-weight: 500;
@@ -190,12 +190,12 @@ body
     transition: border-radius 0.5s;
 }
 
-.wiki-container > .sidebar > .links > div.active > h1
+.wiki-container > #sidebar > .links > div.active > h1
 {
     border-radius: 6px;
 }
 
-.wiki-container > .sidebar > .links > div > h1::before
+.wiki-container > #sidebar > .links > div > h1::before
 {
     font-family: "Font Awesome 6 Free";
     font-weight: 900;
@@ -209,75 +209,75 @@ body
     transition: transform 0.5s;
 }
 
-.wiki-container > .sidebar > .links > div.active > h1::before
+.wiki-container > #sidebar > .links > div.active > h1::before
 {
     transform: rotateZ(0deg);
 }
 
-.wiki-container > .sidebar > .links > div > ul
+.wiki-container > #sidebar > .links > div > ul
 {
 }
 
-.wiki-container > .sidebar > .links > div > ul:not(:last-child)
+.wiki-container > #sidebar > .links > div > ul:not(:last-child)
 {
     margin-bottom: 20px;
 }
 
-.wiki-container > .sidebar > .links > div > ul > li
+.wiki-container > #sidebar > .links > div > ul > li
 {
     padding: 4px 8px;
 }    
 
-.wiki-container > .sidebar > .links > div > ul > li > a
+.wiki-container > #sidebar > .links > div > ul > li > a
 {
     color: white;
     text-decoration: none;
 }
 
-.wiki-container > .sidebar > .links > div > ul > li:nth-child(even)
+.wiki-container > #sidebar > .links > div > ul > li:nth-child(even)
 {
     background-color: #afafaf73;
 }
 
-.wiki-container > .sidebar > .links > div > ul > li:nth-child(odd)
+.wiki-container > #sidebar > .links > div > ul > li:nth-child(odd)
 {
     background-color: #8f8f8f54;
 }
 
-.wiki-container > .sidebar > .links > div > ul > li:last-child
+.wiki-container > #sidebar > .links > div > ul > li:last-child
 {
     border-bottom-left-radius: 6px;
     border-bottom-right-radius: 6px;
 }
 
-.wiki-container > .sidebar > .links > .lonely-links
+.wiki-container > #sidebar > .links > .lonely-links
 {
     margin-top: 20px;
 }
 
-.wiki-container > .sidebar > .links > .lonely-links > li
+.wiki-container > #sidebar > .links > .lonely-links > li
 {
     padding: 4px 10px;
 }
 
-.wiki-container > .sidebar > .links > .lonely-links > li:first-child
+.wiki-container > #sidebar > .links > .lonely-links > li:first-child
 {
     border-top-left-radius: 6px;
     border-top-right-radius: 6px;
 }
 
-.wiki-container > .sidebar > .links > .lonely-links > li:last-child
+.wiki-container > #sidebar > .links > .lonely-links > li:last-child
 {
     border-bottom-left-radius: 6px;
     border-bottom-right-radius: 6px;
 }
 
-.wiki-container > .sidebar > .links > .lonely-links > li:nth-child(even)
+.wiki-container > #sidebar > .links > .lonely-links > li:nth-child(even)
 {
     background-color: #22222278;
 }
 
-.wiki-container > .sidebar > .links > .lonely-links > li:nth-child(odd)
+.wiki-container > #sidebar > .links > .lonely-links > li:nth-child(odd)
 {
     background-color: #00000078;
 }
