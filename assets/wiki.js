@@ -6,7 +6,7 @@ $(document).ready(function(event)
         {
             if ($("#searchbar").is(":focus"))
                 return;
-        
+            
             $("#searchbar").focus();
             
             event.preventDefault();
@@ -77,6 +77,7 @@ $(document).ready(function(event)
         event.stopPropagation();
     
         let href = $(event.target).attr('href').substr(28);
+        const isFile = $(event.target).hasClass("file");
         
         $(".wiki-content").addClass("loading");
         
@@ -103,6 +104,9 @@ $(document).ready(function(event)
                 window.history.pushState({}, '', data.currentPageHref);
                 document.title = data.title;
                 document.body.scrollTop = document.documentElement.scrollTop = 0;
+                
+                if (isFile)
+                    $("#sidebar-close-button").click();
             }
             else
                 alert("error2");
