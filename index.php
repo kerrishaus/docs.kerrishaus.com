@@ -266,7 +266,7 @@
                             
                             // TODO: if filepath is empty, display it as a regular page
                             
-                            $containers .= "<div><h1><a href='{$fhref}' class='nav-link'>{$fname}</a></h1><ul>";
+                            $containers .= "<div><h1><a href='{$fhref}' class='nav-link directory'>{$fname}</a></h1><ul>";
                             
                             // cheap and easy "sorting" by type, directories on top, links below
                             $directories = "";
@@ -288,9 +288,9 @@
                                 $fhref_ = "{$webUriBase}/{$file}/{$fileInfo_["filename"]}";
                                 
                                 if (is_dir("{$filepath}/{$file}/{$file_}"))
-                                    $directories .= "<li><a href='{$fhref_}' class='nav-link'><i class='fas fa-folder-open'></i> {$fname_}</a></li>";
+                                    $directories .= "<li><a href='{$fhref_}' class='nav-link directory'><i class='fas fa-folder-open'></i> {$fname_}</a></li>";
                                 else
-                                    $links .= "<li><a href='{$fhref_}' class='nav-link'>{$fname_}</a></li>";
+                                    $links .= "<li><a href='{$fhref_}' class='nav-link file'>{$fname_}</a></li>";
                             }
                             
                             $containers .= $directories;
@@ -302,13 +302,14 @@
                         {
                             // TODO: this is where directories that have no children (index.md is not included as a child) are placed.
                             // it needs to look prettier.
-                            $containers .= "<div><h1><a href='{$fhref}' class='nav-link'>{$fname}</a></h1></div>";
+                            $containers .= "<div><h1><a href='{$fhref}' class='nav-link directory'>{$fname}</a></h1></div>";
                             
                             //Log::debug("Directory {$filepath}/{$file} contains no children.");
                         }
                     }
                     else
-                        $pageLinks .= "<li><a href='{$fhref}' class='nav-link'>{$fname}</a></li>" . PHP_EOL;
+                        // this will go in lonely links
+                        $pageLinks .= "<li><a href='{$fhref}' class='nav-link file'>{$fname}</a></li>" . PHP_EOL;
                 }
             }
             
