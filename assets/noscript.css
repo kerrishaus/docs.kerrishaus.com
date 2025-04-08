@@ -1,14 +1,14 @@
-.wiki-container > .sidebar > .links > div > ul
+.wiki-container > #sidebar > .links > div > ul
 {
     display: block;
 }
 
-.wiki-container > .sidebar > .links > div > h1::before
+.wiki-container > #sidebar > .links > div > h1::before
 {
     transform: rotateZ(90deg);
 }
 
-.wiki-container > .sidebar > .links > div > h1
+.wiki-container > #sidebar > .links > div > h1
 {
     border-radius: 6px 6px 0px 0px !important;
 }
