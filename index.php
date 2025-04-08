@@ -390,7 +390,7 @@
     
     <body>
         <div class="wiki-container">
-            <div class="sidebar" id="sidebar">
+            <div id="sidebar">
                 <div class="navbar-brand">
                     <a href="https://kerrishaus.com/" class="navbar-brand">
                         <center>
