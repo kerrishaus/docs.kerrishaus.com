@@ -451,6 +451,11 @@ a:hover
     font-size: 64px;
 }
 
+.wiki-content a
+{
+    color: #1da5d9
+}
+
 .wiki-content kbd
 {
     background-color: #222;
