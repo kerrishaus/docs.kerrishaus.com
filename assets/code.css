@@ -9,4 +9,5 @@ code
 pre code
 {
     background-color: unset;
+    padding: 0;
 }
