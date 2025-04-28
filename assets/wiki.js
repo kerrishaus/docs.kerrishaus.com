@@ -103,7 +103,7 @@ $(document).ready(function(event)
 
                 window.history.pushState({}, '', data.currentPageHref);
                 document.title = data.title;
-                document.body.scrollTop = document.documentElement.scrollTop = 0;
+                document.querySelector(".wiki-content-container").scrollTop = document.documentElement.scrollTop = 0;
                 
                 if (isFile)
                     $("#sidebar-close-button").click();
