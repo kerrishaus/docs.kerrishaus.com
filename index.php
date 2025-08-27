@@ -62,7 +62,7 @@
     {
         global $ignoredFiles;
         
-        if (file_exists($directory))
+        if (@file_exists($directory))
             return array_diff(scandir($directory), $ignoredFiles);
         else
             return false;
@@ -74,7 +74,7 @@
     {
         global $ignoredFiles;
         
-        if (!file_exists($dir))
+        if (!@file_exists($dir))
             return false;
         
         $result = [];
@@ -115,7 +115,7 @@
         // if the exact file exists, it should probably be a directory
         // we don't want people using .md in the url, so if a filename
         // is requested with it, we treat it as invalid.
-        if (file_exists($localFileUri))
+        if (@file_exists($localFileUri))
         {
             //Log::debug("Exact file exists.");
             
@@ -124,7 +124,7 @@
             {
                 //Log::debug("Exact file is a directory.");
                 
-                if (file_exists("{$localFileUri}/index.md"))
+                if (@file_exists("{$localFileUri}/index.md"))
                 {
                     $localFileUri = "{$localFileUri}/index.md";
                     $localDirectoryUri = pathinfo($localFileUri, PATHINFO_DIRNAME);
@@ -147,7 +147,7 @@
                 $localFileUri = null;
             }
         }
-        else if (file_exists("{$localFileUri}.md"))
+        else if (@file_exists("{$localFileUri}.md"))
         {
             //Log::debug("File + .md exists, it is a regular article.");
             
